@@ -12,3 +12,12 @@ GET {{uri}}/hello/Patrick
 
 ### HTML
 GET {{uri}}/hello.html
+
+### HTML #2
+GET {{uri}}/html/hello.txt
+
+### Static
+GET {{uri}}/static/hello.md
+
+### Static
+GET {{uri}}/static/test.css

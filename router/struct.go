@@ -10,6 +10,7 @@ type Handler func(*Context)
 type Route struct {
 	Pattern *regexp.Regexp
 	Handler Handler
+	Methods []string
 }
 
 type App struct {
