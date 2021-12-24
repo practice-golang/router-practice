@@ -1,0 +1,14 @@
+@uri = http://localhost:4416
+
+
+### Not found
+GET {{uri}}/not-found
+
+### Hello world
+GET {{uri}}/hello
+
+### Hello people
+GET {{uri}}/hello/Patrick
+
+### HTML
+GET {{uri}}/hello.html
