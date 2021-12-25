@@ -1,13 +1,15 @@
 package router
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/fs"
-	"log"
+	"io/ioutil"
 	"net/http"
 	"regexp"
-	"router-practice/model"
+	"router-practice/variable"
 )
 
 func NewApp() *App {
@@ -59,6 +61,25 @@ func (a *App) Handle(pattern string, handler Handler, methods ...string) {
 func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	c := &Context{Request: r, ResponseWriter: w}
 
+	b, _ := ioutil.ReadAll(c.Body)
+	c.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+
+	log := variable.Logger.Log()
+	if json.Valid(b) {
+		log = log.RawJSON("body", b)
+	} else {
+		log = log.Fields(map[string]interface{}{"body": b})
+	}
+
+	log.
+		Timestamp().
+		Str("method", c.Method).
+		Str("path", c.URL.Path).
+		Str("remote", c.RemoteAddr).
+		Str("user-agent", c.UserAgent()).
+		Fields(map[string]interface{}{"header": c.Request.Header}).
+		Send()
+
 	for _, rt := range a.Routes {
 		if matches := rt.Pattern.FindStringSubmatch(c.URL.Path); len(matches) > 0 {
 
@@ -99,9 +120,9 @@ func (c *Context) Html(code int, body []byte) {
 var StaticServer Handler
 
 func SetupStatic() {
-	StaticContent, err := fs.Sub(fs.FS(model.Static), "static")
+	StaticContent, err := fs.Sub(fs.FS(variable.Static), "static")
 	if err != nil {
-		log.Fatal(err)
+		variable.Logger.Fatal().Err(err).Msg("SetupStatic")
 	}
 	s := http.StripPrefix("/static/", http.FileServer(http.FS(StaticContent)))
 	// s := http.StripPrefix("/static/", http.FileServer(http.Dir("../static")))

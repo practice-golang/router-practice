@@ -2,12 +2,11 @@ package main // import "router-practice"
 
 import (
 	"embed"
-	"fmt"
-	"log"
 	"net/http"
 	"router-practice/handler"
-	"router-practice/model"
+	"router-practice/logger"
 	"router-practice/router"
+	"router-practice/variable"
 )
 
 //go:embed html/*
@@ -19,8 +18,10 @@ var Static embed.FS
 func main() {
 	uri := "127.0.0.1:4416"
 
-	model.Content = Content
-	model.Static = Static
+	variable.Content = Content
+	variable.Static = Static
+
+	logger.SetupLogger()
 
 	router.SetupStatic()
 	a := router.NewApp()
@@ -36,10 +37,10 @@ func main() {
 
 	a.Handle(`/static/*`, router.StaticServer, "GET")
 
-	fmt.Println(uri)
+	variable.Logger.Log().Timestamp().Str("listen", uri+"\n").Send()
 
 	err := http.ListenAndServe(uri, a)
 	if err != nil {
-		log.Fatalf("Could not start server: %s\n", err.Error())
+		variable.Logger.Fatal().Err(err).Timestamp().Msg("Server start failed")
 	}
 }

@@ -19,7 +19,7 @@ Content-Type: application/x-www-form-urlencoded
 Origin: http://localhost:4416
 
 name=john&password=12345
-&name=john&password=12345
+
 
 ### POST - JSON
 POST {{uri}}/user HTTP/1.1

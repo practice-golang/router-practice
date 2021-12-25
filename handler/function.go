@@ -1,12 +1,13 @@
 package handler
 
 import (
-	"log"
+	"bytes"
 	"net/http"
 	"os"
 	"path"
 	"router-practice/model"
 	"router-practice/router"
+	"router-practice/variable"
 
 	"github.com/goccy/go-json"
 )
@@ -65,12 +66,14 @@ func StaticHTML(c *router.Context) {
 	if _, er := os.Stat(filePATH); er == nil {
 		h, err = os.ReadFile(filePATH)
 	} else {
-		h, err = model.Content.ReadFile("html/" + path.Base(c.URL.Path))
+		h, err = variable.Content.ReadFile("html/" + path.Base(c.URL.Path))
 	}
 
 	if err != nil {
-		log.Fatal(err)
+		variable.Logger.Fatal().Err(err).Msg("StaticHTML")
 	}
+
+	h = bytes.ReplaceAll(h, []byte("#USERNAME"), []byte("Robert Garcia"))
 
 	c.Html(http.StatusOK, h)
 }
@@ -82,11 +85,11 @@ func StaticFiles(c *router.Context) {
 	if _, er := os.Stat(filePATH); er == nil {
 		h, err = os.ReadFile(filePATH)
 	} else {
-		h, err = model.Content.ReadFile("html/" + path.Base(c.URL.Path))
+		h, err = variable.Content.ReadFile("html/" + path.Base(c.URL.Path))
 	}
 
 	if err != nil {
-		log.Fatal(err)
+		variable.Logger.Fatal().Err(err).Msg("StaticFiles")
 	}
 
 	c.Text(http.StatusOK, string(h))
