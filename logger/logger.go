@@ -9,6 +9,10 @@ import (
 	"github.com/rs/zerolog"
 )
 
+var (
+	Object zerolog.Logger
+)
+
 func SetupLogger() {
 	zerolog.TimeFieldFormat = "20060102150405"
 	zerolog.TimestampFieldName = "datetime"
@@ -19,5 +23,5 @@ func SetupLogger() {
 	w := io.MultiWriter(f)
 	// w := io.Writer(f)
 
-	variable.Logger = zerolog.New(w).With().Logger()
+	Object = zerolog.New(w).With().Logger()
 }

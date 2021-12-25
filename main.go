@@ -26,16 +26,22 @@ func main() {
 	logger.SetupLogger()
 
 	router.SetupStatic()
-	a := router.NewApp()
+	a := router.New()
+
+	all := []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"}
+
+	a.Handle(`^[/|]$`, handler.Index, "GET")
 
 	a.Handle(`^/hello$`, handler.Hello, "GET", "POST")
 	a.Handle(`/hello/([\w\._-]+)$`, handler.HelloParam, "GET")
 
-	a.Handle(`^/login$`, handler.Login, "GET", "POST")
-	a.Handle(`^/user$`, handler.User, "POST")
+	a.Handle(`/get-param$`, handler.GetParam, "GET")
 
-	a.Handle(`/[^/]+.html`, handler.StaticHTML, "GET")
-	a.Handle(`/html/*`, handler.StaticFiles, "GET")
+	a.Handle(`^/post-form$`, handler.PostForm, "GET", "POST")
+	a.Handle(`^/post-json$`, handler.PostJson, all...)
+
+	a.Handle(`/[^/]+.html`, handler.HandleHTML, "GET")
+	a.Handle(`^/.*.[css|js|map]$`, handler.HandleAsset, "GET")
 
 	a.Handle(`/static/*`, router.StaticServer, "GET")
 
@@ -49,11 +55,11 @@ func main() {
 	// })
 	// handler := c.Handler(router)
 
-	variable.Logger.Log().Timestamp().Str("listen", uri+"\n").Send()
+	logger.Object.Log().Timestamp().Str("listen", uri+"\n").Send()
 	println("Listen", uri)
 
 	err := http.ListenAndServe(uri, handler)
 	if err != nil {
-		variable.Logger.Fatal().Err(err).Timestamp().Msg("Server start failed")
+		logger.Object.Warn().Err(err).Timestamp().Msg("Server start failed")
 	}
 }

@@ -5,12 +5,18 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"router-practice/logger"
 	"router-practice/model"
 	"router-practice/router"
 	"router-practice/variable"
 
 	"github.com/goccy/go-json"
 )
+
+func Index(c *router.Context) {
+	c.URL.Path = "/index.html"
+	HandleHTML(c)
+}
 
 func Hello(c *router.Context) {
 	if c.Method == "GET" {
@@ -21,27 +27,42 @@ func Hello(c *router.Context) {
 }
 
 func HelloParam(c *router.Context) {
-	c.Text(http.StatusOK, "Hello "+c.Params[0])
+	if len(c.Params) > 0 {
+		c.Text(http.StatusOK, "Hello "+c.Params[0])
+	} else {
+		c.Text(http.StatusBadRequest, "Missing parameter")
+	}
 }
 
-func Login(c *router.Context) {
+func GetParam(c *router.Context) {
 	result := ""
 
-	if c.Method == "GET" {
-		result = "Hello world GET"
-	} else if c.Method == "POST" {
-		result = c.FormValue("name") + "/" + c.FormValue("password") + "\n"
+	params := c.URL.Query()
 
+	for k := range c.URL.Query() {
+		result += k + "=" + params.Get(k) + "\n"
+	}
+
+	c.Text(http.StatusOK, result)
+}
+
+func PostForm(c *router.Context) {
+	result := ""
+
+	switch c.Method {
+	case "GET":
+		result = "Hello world GET"
+	case "POST":
 		c.ParseForm()
-		for k, v := range c.Form {
-			result += k + ":" + v[0] + "\n"
+		for k := range c.Form {
+			result += k + "=" + c.FormValue(k) + "\n"
 		}
 	}
 
 	c.Text(http.StatusOK, result)
 }
 
-func User(c *router.Context) {
+func PostJson(c *router.Context) {
 	user := model.UserInfo{}
 
 	err := json.NewDecoder(c.Body).Decode(&user)
@@ -59,18 +80,18 @@ func User(c *router.Context) {
 	c.Text(http.StatusOK, string(result))
 }
 
-func StaticHTML(c *router.Context) {
+func HandleHTML(c *router.Context) {
 	var h []byte
 	var err error
-	filePATH := "../html/" + path.Base(c.URL.Path)
-	if _, er := os.Stat(filePATH); er == nil {
-		h, err = os.ReadFile(filePATH)
+
+	if _, er := os.Stat("../html/" + path.Base(c.URL.Path)); er == nil {
+		h, err = os.ReadFile("../html/" + path.Base(c.URL.Path)) // Real storage
 	} else {
-		h, err = variable.Content.ReadFile("html/" + path.Base(c.URL.Path))
+		h, err = variable.Content.ReadFile("html/" + path.Base(c.URL.Path)) // Embed storage
 	}
 
 	if err != nil {
-		variable.Logger.Fatal().Err(err).Msg("StaticHTML")
+		logger.Object.Warn().Err(err).Msg("StaticHTML")
 	}
 
 	h = bytes.ReplaceAll(h, []byte("#USERNAME"), []byte("Robert Garcia"))
@@ -78,19 +99,19 @@ func StaticHTML(c *router.Context) {
 	c.Html(http.StatusOK, h)
 }
 
-func StaticFiles(c *router.Context) {
+func HandleAsset(c *router.Context) {
 	var h []byte
 	var err error
-	filePATH := "../html/" + path.Base(c.URL.Path)
-	if _, er := os.Stat(filePATH); er == nil {
-		h, err = os.ReadFile(filePATH)
+
+	if _, er := os.Stat("../html" + c.URL.Path); er == nil {
+		h, err = os.ReadFile("../html" + c.URL.Path) // Real storage
 	} else {
-		h, err = variable.Content.ReadFile("html/" + path.Base(c.URL.Path))
+		h, err = variable.Content.ReadFile("html" + c.URL.Path) // Embed storage
 	}
 
 	if err != nil {
-		variable.Logger.Fatal().Err(err).Msg("StaticFiles")
+		logger.Object.Warn().Err(err).Msg("StaticFiles")
 	}
 
-	c.Text(http.StatusOK, string(h))
+	c.File(http.StatusOK, h)
 }

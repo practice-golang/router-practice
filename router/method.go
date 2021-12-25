@@ -7,12 +7,16 @@ import (
 	"io"
 	"io/fs"
 	"io/ioutil"
+	"log"
+	"mime"
 	"net/http"
+	"path"
 	"regexp"
+	"router-practice/logger"
 	"router-practice/variable"
 )
 
-func NewApp() *App {
+func New() *App {
 	app := &App{
 		DefaultRoute: func(c *Context) {
 			c.Text(http.StatusNotFound, "Not found")
@@ -31,18 +35,6 @@ func (a *App) Handle(pattern string, handler Handler, methods ...string) {
 
 	for _, method := range methods {
 		switch method {
-		case "GET":
-			m["GET"] = true
-		case "HEAD":
-			m["HEAD"] = true
-		case "POST":
-			m["POST"] = true
-		case "PUT":
-			m["PUT"] = true
-		case "PATCH":
-			m["PATCH"] = true
-		case "DELETE":
-			m["DELETE"] = true
 		case "*":
 			m["GET"] = true
 			m["HEAD"] = true
@@ -50,6 +42,8 @@ func (a *App) Handle(pattern string, handler Handler, methods ...string) {
 			m["PUT"] = true
 			m["PATCH"] = true
 			m["DELETE"] = true
+		default:
+			m[method] = true
 		}
 	}
 
@@ -64,15 +58,14 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	b, _ := ioutil.ReadAll(c.Body)
 	c.Body = ioutil.NopCloser(bytes.NewBuffer(b))
 
-	log := variable.Logger.Log()
+	logging := logger.Object.Log()
 	if json.Valid(b) {
-		log = log.RawJSON("body", b)
+		logging = logging.RawJSON("body", b)
 	} else {
-		log = log.Fields(map[string]interface{}{"body": b})
+		logging = logging.Fields(map[string]interface{}{"body": b})
 	}
 
-	log.
-		Timestamp().
+	logging.Timestamp().
 		Str("method", c.Method).
 		Str("path", c.URL.Path).
 		Str("remote", c.RemoteAddr).
@@ -82,8 +75,9 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	for _, rt := range a.Routes {
 		if matches := rt.Pattern.FindStringSubmatch(c.URL.Path); len(matches) > 0 {
+			log.Println(rt.Pattern.String(), c.URL.Path)
 
-			if !rt.Methods[c.Request.Method] {
+			if !rt.Methods[c.Method] {
 				// a.MethodNotAllowed(c)
 				a.DefaultRoute(c)
 				return
@@ -113,8 +107,14 @@ func (c *Context) Html(code int, body []byte) {
 	c.ResponseWriter.Header().Set("Content-Type", "text/html")
 	c.WriteHeader(code)
 
-	io.Writer(c.ResponseWriter).Write(body)
-	// io.WriteString(c.ResponseWriter, fmt.Sprintf("%s\n", body))
+	c.ResponseWriter.Write(body)
+}
+
+func (c *Context) File(code int, body []byte) {
+	c.ResponseWriter.Header().Set("Content-Type", mime.TypeByExtension(path.Ext(c.URL.Path)))
+	c.WriteHeader(code)
+
+	c.ResponseWriter.Write(body)
 }
 
 var StaticServer Handler
@@ -122,7 +122,7 @@ var StaticServer Handler
 func SetupStatic() {
 	StaticContent, err := fs.Sub(fs.FS(variable.Static), "static")
 	if err != nil {
-		variable.Logger.Fatal().Err(err).Msg("SetupStatic")
+		logger.Object.Warn().Err(err).Msg("SetupStatic")
 	}
 	s := http.StripPrefix("/static/", http.FileServer(http.FS(StaticContent)))
 	// s := http.StripPrefix("/static/", http.FileServer(http.Dir("../static")))

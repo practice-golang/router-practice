@@ -2,8 +2,6 @@ package variable
 
 import (
 	"embed"
-
-	"github.com/rs/zerolog"
 )
 
 var (
@@ -11,6 +9,4 @@ var (
 
 	Content embed.FS
 	Static  embed.FS
-
-	Logger zerolog.Logger
 )
