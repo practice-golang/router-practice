@@ -7,16 +7,16 @@ import (
 	"log"
 	"net/http"
 	"regexp"
-	"router-practice/value"
+	"router-practice/model"
 )
 
 func NewApp() *App {
 	app := &App{
-		DefaultRoute: func(ctx *Context) {
-			ctx.Text(http.StatusNotFound, "Not found")
+		DefaultRoute: func(c *Context) {
+			c.Text(http.StatusNotFound, "Not found")
 		},
-		MethodNotAllowed: func(ctx *Context) {
-			ctx.Text(http.StatusNotFound, "Method not allowed")
+		MethodNotAllowed: func(c *Context) {
+			c.Text(http.StatusNotFound, "Method not allowed")
 		},
 	}
 
@@ -57,27 +57,27 @@ func (a *App) Handle(pattern string, handler Handler, methods ...string) {
 }
 
 func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	ctx := &Context{Request: r, ResponseWriter: w}
+	c := &Context{Request: r, ResponseWriter: w}
 
 	for _, rt := range a.Routes {
-		if matches := rt.Pattern.FindStringSubmatch(ctx.URL.Path); len(matches) > 0 {
+		if matches := rt.Pattern.FindStringSubmatch(c.URL.Path); len(matches) > 0 {
 
-			if !rt.Methods[ctx.Request.Method] {
-				// a.MethodNotAllowed(ctx)
-				a.DefaultRoute(ctx)
+			if !rt.Methods[c.Request.Method] {
+				// a.MethodNotAllowed(c)
+				a.DefaultRoute(c)
 				return
 			}
 
 			if len(matches) > 1 {
-				ctx.Params = matches[1:]
+				c.Params = matches[1:]
 			}
 
-			rt.Handler(ctx)
+			rt.Handler(c)
 			return
 		}
 	}
 
-	a.DefaultRoute(ctx)
+	a.DefaultRoute(c)
 }
 
 func (c *Context) Text(code int, body string) {
@@ -99,11 +99,11 @@ func (c *Context) Html(code int, body []byte) {
 var StaticServer Handler
 
 func SetupStatic() {
-	StaticContent, err := fs.Sub(fs.FS(value.Static), "static")
+	StaticContent, err := fs.Sub(fs.FS(model.Static), "static")
 	if err != nil {
 		log.Fatal(err)
 	}
 	s := http.StripPrefix("/static/", http.FileServer(http.FS(StaticContent)))
 	// s := http.StripPrefix("/static/", http.FileServer(http.Dir("../static")))
-	StaticServer = func(ctx *Context) { s.ServeHTTP(ctx.ResponseWriter, ctx.Request) }
+	StaticServer = func(c *Context) { s.ServeHTTP(c.ResponseWriter, c.Request) }
 }

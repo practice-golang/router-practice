@@ -5,48 +5,89 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"router-practice/model"
 	"router-practice/router"
-	"router-practice/value"
+
+	"github.com/goccy/go-json"
 )
 
-func Hello(ctx *router.Context) {
-	ctx.Text(http.StatusOK, "Hello world")
+func Hello(c *router.Context) {
+	if c.Method == "GET" {
+		c.Text(http.StatusOK, "Hello world GET")
+	} else if c.Method == "POST" {
+		c.Text(http.StatusOK, "Hello world POST")
+	}
 }
 
-func HelloParam(ctx *router.Context) {
-	ctx.Text(http.StatusOK, "Hello "+ctx.Params[0])
+func HelloParam(c *router.Context) {
+	c.Text(http.StatusOK, "Hello "+c.Params[0])
 }
 
-func StaticHTML(ctx *router.Context) {
+func Login(c *router.Context) {
+	result := ""
+
+	if c.Method == "GET" {
+		result = "Hello world GET"
+	} else if c.Method == "POST" {
+		result = c.FormValue("name") + "/" + c.FormValue("password") + "\n"
+
+		c.ParseForm()
+		for k, v := range c.Form {
+			result += k + ":" + v[0] + "\n"
+		}
+	}
+
+	c.Text(http.StatusOK, result)
+}
+
+func User(c *router.Context) {
+	user := model.UserInfo{}
+
+	err := json.NewDecoder(c.Body).Decode(&user)
+	if err != nil {
+		c.Text(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	result, err := json.Marshal(user)
+	if err != nil {
+		c.Text(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.Text(http.StatusOK, string(result))
+}
+
+func StaticHTML(c *router.Context) {
 	var h []byte
 	var err error
-	filePATH := "../html/" + path.Base(ctx.URL.Path)
+	filePATH := "../html/" + path.Base(c.URL.Path)
 	if _, er := os.Stat(filePATH); er == nil {
 		h, err = os.ReadFile(filePATH)
 	} else {
-		h, err = value.Content.ReadFile("html/" + path.Base(ctx.URL.Path))
+		h, err = model.Content.ReadFile("html/" + path.Base(c.URL.Path))
 	}
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	ctx.Html(http.StatusOK, h)
+	c.Html(http.StatusOK, h)
 }
 
-func StaticFiles(ctx *router.Context) {
+func StaticFiles(c *router.Context) {
 	var h []byte
 	var err error
-	filePATH := "../html/" + path.Base(ctx.URL.Path)
+	filePATH := "../html/" + path.Base(c.URL.Path)
 	if _, er := os.Stat(filePATH); er == nil {
 		h, err = os.ReadFile(filePATH)
 	} else {
-		h, err = value.Content.ReadFile("html/" + path.Base(ctx.URL.Path))
+		h, err = model.Content.ReadFile("html/" + path.Base(c.URL.Path))
 	}
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	ctx.Text(http.StatusOK, string(h))
+	c.Text(http.StatusOK, string(h))
 }
