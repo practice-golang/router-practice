@@ -7,6 +7,8 @@ import (
 	"router-practice/logger"
 	"router-practice/router"
 	"router-practice/variable"
+
+	"github.com/rs/cors"
 )
 
 //go:embed html/*
@@ -37,9 +39,20 @@ func main() {
 
 	a.Handle(`/static/*`, router.StaticServer, "GET")
 
-	variable.Logger.Log().Timestamp().Str("listen", uri+"\n").Send()
+	handler := cors.Default().Handler(a)
+	// c := cors.New(cors.Options{
+	// 	AllowedOrigins:   []string{"http://localhost:4416"},
+	// 	AllowedMethods:   []string{"GET"},
+	// 	AllowedHeaders:   []string{"*"},
+	// 	AllowCredentials: true,
+	// 	Debug:            false,
+	// })
+	// handler := c.Handler(router)
 
-	err := http.ListenAndServe(uri, a)
+	variable.Logger.Log().Timestamp().Str("listen", uri+"\n").Send()
+	println("Listen", uri)
+
+	err := http.ListenAndServe(uri, handler)
 	if err != nil {
 		variable.Logger.Fatal().Err(err).Timestamp().Msg("Server start failed")
 	}
