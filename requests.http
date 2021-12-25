@@ -7,17 +7,23 @@ GET {{uri}}/not-found
 ### Hello world
 GET {{uri}}/hello
 
+### Hello world
+POST {{uri}}/hello
+
 ### Hello people
 GET {{uri}}/hello/Patrick
 
-### HTML
+### embed/HTML
 GET {{uri}}/hello.html
 
-### HTML #2
+### real/HTML
 GET {{uri}}/html/hello.txt
 
-### Static
+### embed/Static - text
 GET {{uri}}/static/hello.md
 
-### Static
+### embed/Static - css
 GET {{uri}}/static/test.css
+
+### embed/Static - js
+GET {{uri}}/static/hello.js

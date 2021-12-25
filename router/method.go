@@ -3,17 +3,20 @@ package router
 import (
 	"fmt"
 	"io"
+	"io/fs"
 	"log"
 	"net/http"
 	"regexp"
-
-	"github.com/wesovilabs/koazee"
+	"router-practice/value"
 )
 
 func NewApp() *App {
 	app := &App{
 		DefaultRoute: func(ctx *Context) {
 			ctx.Text(http.StatusNotFound, "Not found")
+		},
+		MethodNotAllowed: func(ctx *Context) {
+			ctx.Text(http.StatusNotFound, "Method not allowed")
 		},
 	}
 
@@ -22,7 +25,33 @@ func NewApp() *App {
 
 func (a *App) Handle(pattern string, handler Handler, methods ...string) {
 	re := regexp.MustCompile(pattern)
-	route := Route{Pattern: re, Handler: handler, Methods: methods}
+	m := Methods{}
+
+	for _, method := range methods {
+		switch method {
+		case "GET":
+			m["GET"] = true
+		case "HEAD":
+			m["HEAD"] = true
+		case "POST":
+			m["POST"] = true
+		case "PUT":
+			m["PUT"] = true
+		case "PATCH":
+			m["PATCH"] = true
+		case "DELETE":
+			m["DELETE"] = true
+		case "*":
+			m["GET"] = true
+			m["HEAD"] = true
+			m["POST"] = true
+			m["PUT"] = true
+			m["PATCH"] = true
+			m["DELETE"] = true
+		}
+	}
+
+	route := Route{Pattern: re, Handler: handler, Methods: m}
 
 	a.Routes = append(a.Routes, route)
 }
@@ -32,10 +61,9 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	for _, rt := range a.Routes {
 		if matches := rt.Pattern.FindStringSubmatch(ctx.URL.Path); len(matches) > 0 {
-			log.Println("Method: ", rt.Methods, ctx.Request.Method)
 
-			isMethodsExists, _ := koazee.StreamOf(rt.Methods).Contains(ctx.Request.Method)
-			if !isMethodsExists {
+			if !rt.Methods[ctx.Request.Method] {
+				// a.MethodNotAllowed(ctx)
 				a.DefaultRoute(ctx)
 				return
 			}
@@ -66,4 +94,16 @@ func (c *Context) Html(code int, body []byte) {
 
 	io.Writer(c.ResponseWriter).Write(body)
 	// io.WriteString(c.ResponseWriter, fmt.Sprintf("%s\n", body))
+}
+
+var StaticServer Handler
+
+func SetupStatic() {
+	StaticContent, err := fs.Sub(fs.FS(value.Static), "static")
+	if err != nil {
+		log.Fatal(err)
+	}
+	s := http.StripPrefix("/static/", http.FileServer(http.FS(StaticContent)))
+	// s := http.StripPrefix("/static/", http.FileServer(http.Dir("../static")))
+	StaticServer = func(ctx *Context) { s.ServeHTTP(ctx.ResponseWriter, ctx.Request) }
 }
