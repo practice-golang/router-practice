@@ -6,7 +6,6 @@ import (
 	"router-practice/handler"
 	"router-practice/logging"
 	"router-practice/router"
-	"router-practice/variable"
 
 	"github.com/rs/cors"
 )
@@ -22,8 +21,8 @@ func main() {
 
 	logging.SetupLogger()
 
-	variable.Content = Content
-	variable.Static = Static
+	router.Content = Content
+	router.Static = Static
 
 	router.SetupStaticServer()
 
@@ -38,7 +37,7 @@ func main() {
 	r.Handle(`^[/|]$`, handler.Index, "GET")
 
 	r.Handle(`^/hello$`, handler.Hello, "GET", "POST")
-	r.Handle(`/hello/([\w\._-]+)$`, handler.HelloParam, "GET")
+	r.Handle(`/hello/([\p{L}\d_]+)$`, handler.HelloParam, "GET")
 
 	r.Handle(`/get-param$`, handler.GetParam, "GET")
 	r.Handle(`^/post-form$`, handler.PostForm, "GET", "POST")

@@ -8,7 +8,6 @@ import (
 	"router-practice/model"
 	"router-practice/router"
 	"router-practice/util"
-	"router-practice/variable"
 
 	"github.com/goccy/go-json"
 )
@@ -94,7 +93,7 @@ func HandleHTML(c *router.Context) {
 	if util.CheckFileExists(storePath) {
 		h, err = os.ReadFile(storePath) // Real storage
 	} else {
-		h, err = variable.Content.ReadFile(embedPath) // Embed storage
+		h, err = router.Content.ReadFile(embedPath) // Embed storage
 	}
 
 	if err != nil {
@@ -116,7 +115,7 @@ func HandleAsset(c *router.Context) {
 	if util.CheckFileExists(storePath) {
 		h, err = os.ReadFile(storePath) // Real storage
 	} else {
-		h, err = variable.Content.ReadFile(embedPath) // Embed storage
+		h, err = router.Content.ReadFile(embedPath) // Embed storage
 	}
 
 	if err != nil {
