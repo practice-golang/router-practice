@@ -3,8 +3,6 @@ package router
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
-	"io"
 	"io/fs"
 	"io/ioutil"
 	"log"
@@ -119,7 +117,7 @@ func (c *Context) Text(code int, body string) {
 	c.ResponseWriter.Header().Set("Content-Type", "text/plain")
 	c.WriteHeader(code)
 
-	io.WriteString(c.ResponseWriter, fmt.Sprintf("%s\n", body))
+	c.ResponseWriter.Write([]byte(body))
 }
 
 func (c *Context) Html(code int, body []byte) {
