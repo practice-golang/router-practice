@@ -18,6 +18,10 @@ func Index(c *router.Context) {
 	HandleHTML(c)
 }
 
+func HealthCheck(c *router.Context) {
+	c.Text(http.StatusOK, "Ok")
+}
+
 func Hello(c *router.Context) {
 	if c.Method == "GET" {
 		c.Text(http.StatusOK, "Hello world GET")
