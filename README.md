@@ -16,3 +16,14 @@
 
 ## Other
 * https://benhoyt.com/writings/go-routing
+
+## Todo list for taste
+* token, cookie session
+    * https://github.com/brianvoe/sjwt
+    * https://github.com/chmike/securecookie
+    * https://github.com/go-session/session
+    * https://github.com/adam-hanna/sessions
+    * https://github.com/swithek/sessionup
+    * https://github.com/yvasiyarov/php_session_decoder
+* websocket
+    * https://github.com/olahol/melody
