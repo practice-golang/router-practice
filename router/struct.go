@@ -10,8 +10,8 @@ type Handler func(*Context)
 type Methods map[string]bool
 
 type Route struct {
-	Pattern        *regexp.Regexp
-	Handler        Handler
+	Pattern *regexp.Regexp
+	Handler Handler
 	Methods Methods
 }
 
@@ -19,6 +19,11 @@ type App struct {
 	Routes           []Route
 	DefaultRoute     Handler
 	MethodNotAllowed Handler
+}
+
+type RouteGroup struct {
+	App    *App
+	Prefix string
 }
 
 type Context struct {

@@ -20,15 +20,20 @@ var Static embed.FS
 func main() {
 	uri := "localhost:4416"
 
+	logging.SetupLogger()
+
 	variable.Content = Content
 	variable.Static = Static
 
-	logging.SetupLogger()
-
 	router.SetupStaticServer()
+
 	r := router.New()
 
-	allMethods := []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"}
+	allMethods := []string{"GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH"}
+
+	g := r.Group("/api")
+	g.Handle("(/?)$", handler.HealthCheck, "GET")
+	g.Handle("/hello$", handler.Hello, "GET")
 
 	r.Handle(`^[/|]$`, handler.Index, "GET")
 
@@ -36,7 +41,6 @@ func main() {
 	r.Handle(`/hello/([\w\._-]+)$`, handler.HelloParam, "GET")
 
 	r.Handle(`/get-param$`, handler.GetParam, "GET")
-
 	r.Handle(`^/post-form$`, handler.PostForm, "GET", "POST")
 	r.Handle(`^/post-json$`, handler.PostJson, allMethods...)
 

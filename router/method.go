@@ -14,6 +14,7 @@ import (
 	"regexp"
 	"router-practice/logging"
 	"router-practice/variable"
+	"strings"
 )
 
 var StaticServer Handler
@@ -31,6 +32,19 @@ func New() *App {
 	return app
 }
 
+func (a *App) Group(prefix string) *RouteGroup {
+	group := &RouteGroup{
+		App:    a,
+		Prefix: prefix,
+	}
+
+	return group
+}
+
+func (g *RouteGroup) Handle(pattern string, handler Handler, methods ...string) {
+	g.App.Handle(g.Prefix+pattern, handler, methods...)
+}
+
 func (a *App) Handle(pattern string, handler Handler, methods ...string) {
 	re := regexp.MustCompile(pattern)
 	m := Methods{}
@@ -45,7 +59,7 @@ func (a *App) Handle(pattern string, handler Handler, methods ...string) {
 			m["PATCH"] = true
 			m["DELETE"] = true
 		default:
-			m[method] = true
+			m[strings.ToUpper(method)] = true
 		}
 	}
 
@@ -77,7 +91,7 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	for _, rt := range a.Routes {
 		if matches := rt.Pattern.FindStringSubmatch(c.URL.Path); len(matches) > 0 {
-			log.Println("regex:", rt.Pattern.String(), c.URL.Path)
+			log.Println("Route path regex:", rt.Pattern.String(), c.URL.Path)
 
 			if !rt.Methods[c.Method] {
 				// a.MethodNotAllowed(c)
@@ -104,7 +118,6 @@ func (c *Context) Text(code int, body string) {
 	io.WriteString(c.ResponseWriter, fmt.Sprintf("%s\n", body))
 }
 
-// func (c *Context) Html(code int, body string) {
 func (c *Context) Html(code int, body []byte) {
 	c.ResponseWriter.Header().Set("Content-Type", "text/html")
 	c.WriteHeader(code)

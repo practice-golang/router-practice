@@ -37,23 +37,29 @@ Origin: http://localhost:4416
     "age": "999"
 }
 
-### embed/HTML
+### HTML
 GET {{uri}}/hello.html
 
-### embed/CSS
+### CSS
 GET {{uri}}/assets/css/pure-min.css
 
-### embed/JS
+### JS
 GET {{uri}}/assets/js/knockout-3.5.1.min.js
 
-### real/HTML
-GET {{uri}}/html/index.html
-
-### embed/Static - text
+### text
 GET {{uri}}/static/hello.md
 
-### embed/Static - image #1
+### image #1
 GET {{uri}}/static/gopher.png
 
-### embed/Static - image #2
+### image #2
 GET {{uri}}/static/panic.png
+
+
+
+### Group #1
+POST {{uri}}/api
+
+### Group #2
+GET {{uri}}/api/hello
+
