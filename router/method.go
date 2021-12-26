@@ -76,9 +76,13 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	logger := logging.Object.Log()
 	if json.Valid(b) {
-		logger = logger.RawJSON("body", b)
+		// logger = logger.RawJSON("body", bytes.ReplaceAll(b, []byte("\n"), []byte("")))
+		bc := new(bytes.Buffer)
+		json.Compact(bc, b)
+		logger = logger.RawJSON("body", bc.Bytes())
 	} else {
-		logger = logger.Fields(map[string]interface{}{"body": b})
+		// logger = logger.Fields(map[string]interface{}{"body": b})
+		logger = logger.Fields(map[string]interface{}{"body": bytes.ReplaceAll(b, []byte("\n"), []byte(""))})
 	}
 
 	logger.Timestamp().

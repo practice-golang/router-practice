@@ -7,10 +7,10 @@ GET {{uri}}/not-found
 ### index (=embed/HTML)
 GET {{uri}}
 
-### Hello world
+### Hello world #1
 GET {{uri}}/hello
 
-### Hello world
+### Hello world #2
 POST {{uri}}/hello
 
 ### Hello people
@@ -58,7 +58,7 @@ GET {{uri}}/static/panic.png
 
 
 ### Group #1
-POST {{uri}}/api
+GET {{uri}}/api
 
 ### Group #2
 GET {{uri}}/api/hello
