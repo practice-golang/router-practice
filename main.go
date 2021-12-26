@@ -4,7 +4,7 @@ import (
 	"embed"
 	"net/http"
 	"router-practice/handler"
-	"router-practice/logger"
+	"router-practice/logging"
 	"router-practice/router"
 	"router-practice/variable"
 
@@ -18,48 +18,48 @@ var Content embed.FS
 var Static embed.FS
 
 func main() {
-	uri := "127.0.0.1:4416"
+	uri := "localhost:4416"
 
 	variable.Content = Content
 	variable.Static = Static
 
-	logger.SetupLogger()
+	logging.SetupLogger()
 
-	router.SetupStatic()
-	a := router.New()
+	router.SetupStaticServer()
+	r := router.New()
 
-	all := []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"}
+	allMethods := []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"}
 
-	a.Handle(`^[/|]$`, handler.Index, "GET")
+	r.Handle(`^[/|]$`, handler.Index, "GET")
 
-	a.Handle(`^/hello$`, handler.Hello, "GET", "POST")
-	a.Handle(`/hello/([\w\._-]+)$`, handler.HelloParam, "GET")
+	r.Handle(`^/hello$`, handler.Hello, "GET", "POST")
+	r.Handle(`/hello/([\w\._-]+)$`, handler.HelloParam, "GET")
 
-	a.Handle(`/get-param$`, handler.GetParam, "GET")
+	r.Handle(`/get-param$`, handler.GetParam, "GET")
 
-	a.Handle(`^/post-form$`, handler.PostForm, "GET", "POST")
-	a.Handle(`^/post-json$`, handler.PostJson, all...)
+	r.Handle(`^/post-form$`, handler.PostForm, "GET", "POST")
+	r.Handle(`^/post-json$`, handler.PostJson, allMethods...)
 
-	a.Handle(`/[^/]+.html`, handler.HandleHTML, "GET")
-	a.Handle(`^/.*.[css|js|map]$`, handler.HandleAsset, "GET")
+	r.Handle(`/[^/]+.html`, handler.HandleHTML, "GET")
+	r.Handle(`^/.*.[css|js|map]$`, handler.HandleAsset, "GET")
 
-	a.Handle(`/static/*`, router.StaticServer, "GET")
+	r.Handle(`/static/*`, router.StaticServer, "GET")
 
-	handler := cors.Default().Handler(a)
+	serverHandler := cors.Default().Handler(r)
 	// c := cors.New(cors.Options{
-	// 	AllowedOrigins:   []string{"http://localhost:4416"},
+	// 	AllowedOrigins:   []string{"http://"+listen},
 	// 	AllowedMethods:   []string{"GET"},
 	// 	AllowedHeaders:   []string{"*"},
 	// 	AllowCredentials: true,
 	// 	Debug:            false,
 	// })
-	// handler := c.Handler(router)
+	// serverHandler := c.Handler(r)
 
-	logger.Object.Log().Timestamp().Str("listen", uri+"\n").Send()
+	logging.Object.Log().Timestamp().Str("listen", uri+"\n").Send()
 	println("Listen", uri)
 
-	err := http.ListenAndServe(uri, handler)
+	err := http.ListenAndServe(uri, serverHandler)
 	if err != nil {
-		logger.Object.Warn().Err(err).Timestamp().Msg("Server start failed")
+		logging.Object.Warn().Err(err).Timestamp().Msg("Server start failed")
 	}
 }

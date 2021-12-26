@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"net/http"
 	"os"
-	"path"
-	"router-practice/logger"
+	"router-practice/logging"
 	"router-practice/model"
 	"router-practice/router"
+	"router-practice/util"
 	"router-practice/variable"
 
 	"github.com/goccy/go-json"
@@ -84,14 +84,17 @@ func HandleHTML(c *router.Context) {
 	var h []byte
 	var err error
 
-	if _, er := os.Stat("../html/" + path.Base(c.URL.Path)); er == nil {
-		h, err = os.ReadFile("../html/" + path.Base(c.URL.Path)) // Real storage
+	// If the file exists in the real storage, read real instead of embed.
+	storePath := "../html" + c.URL.Path
+	embedPath := "html" + c.URL.Path
+	if util.CheckFileExists(storePath) {
+		h, err = os.ReadFile(storePath) // Real storage
 	} else {
-		h, err = variable.Content.ReadFile("html/" + path.Base(c.URL.Path)) // Embed storage
+		h, err = variable.Content.ReadFile(embedPath) // Embed storage
 	}
 
 	if err != nil {
-		logger.Object.Warn().Err(err).Msg("StaticHTML")
+		logging.Object.Warn().Err(err).Msg("HandleHTML")
 	}
 
 	h = bytes.ReplaceAll(h, []byte("#USERNAME"), []byte("Robert Garcia"))
@@ -103,14 +106,17 @@ func HandleAsset(c *router.Context) {
 	var h []byte
 	var err error
 
-	if _, er := os.Stat("../html" + c.URL.Path); er == nil {
-		h, err = os.ReadFile("../html" + c.URL.Path) // Real storage
+	// If the file exists in the real storage, read real instead of embed.
+	storePath := "../html" + c.URL.Path
+	embedPath := "html" + c.URL.Path
+	if util.CheckFileExists(storePath) {
+		h, err = os.ReadFile(storePath) // Real storage
 	} else {
-		h, err = variable.Content.ReadFile("html" + c.URL.Path) // Embed storage
+		h, err = variable.Content.ReadFile(embedPath) // Embed storage
 	}
 
 	if err != nil {
-		logger.Object.Warn().Err(err).Msg("StaticFiles")
+		logging.Object.Warn().Err(err).Msg("HandleAsset")
 	}
 
 	c.File(http.StatusOK, h)

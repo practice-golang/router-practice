@@ -12,9 +12,11 @@ import (
 	"net/http"
 	"path"
 	"regexp"
-	"router-practice/logger"
+	"router-practice/logging"
 	"router-practice/variable"
 )
+
+var StaticServer Handler
 
 func New() *App {
 	app := &App{
@@ -58,14 +60,14 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	b, _ := ioutil.ReadAll(c.Body)
 	c.Body = ioutil.NopCloser(bytes.NewBuffer(b))
 
-	logging := logger.Object.Log()
+	logger := logging.Object.Log()
 	if json.Valid(b) {
-		logging = logging.RawJSON("body", b)
+		logger = logger.RawJSON("body", b)
 	} else {
-		logging = logging.Fields(map[string]interface{}{"body": b})
+		logger = logger.Fields(map[string]interface{}{"body": b})
 	}
 
-	logging.Timestamp().
+	logger.Timestamp().
 		Str("method", c.Method).
 		Str("path", c.URL.Path).
 		Str("remote", c.RemoteAddr).
@@ -75,7 +77,7 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	for _, rt := range a.Routes {
 		if matches := rt.Pattern.FindStringSubmatch(c.URL.Path); len(matches) > 0 {
-			log.Println(rt.Pattern.String(), c.URL.Path)
+			log.Println("regex:", rt.Pattern.String(), c.URL.Path)
 
 			if !rt.Methods[c.Method] {
 				// a.MethodNotAllowed(c)
@@ -117,14 +119,12 @@ func (c *Context) File(code int, body []byte) {
 	c.ResponseWriter.Write(body)
 }
 
-var StaticServer Handler
-
-func SetupStatic() {
+func SetupStaticServer() {
 	StaticContent, err := fs.Sub(fs.FS(variable.Static), "static")
 	if err != nil {
-		logger.Object.Warn().Err(err).Msg("SetupStatic")
+		logging.Object.Warn().Err(err).Msg("SetupStatic")
 	}
-	s := http.StripPrefix("/static/", http.FileServer(http.FS(StaticContent)))
-	// s := http.StripPrefix("/static/", http.FileServer(http.Dir("../static")))
+	s := http.StripPrefix("/static/", http.FileServer(http.FS(StaticContent))) // embed storage
+	// s := http.StripPrefix("/static/", http.FileServer(http.Dir("../static"))) // real storage
 	StaticServer = func(c *Context) { s.ServeHTTP(c.ResponseWriter, c.Request) }
 }
