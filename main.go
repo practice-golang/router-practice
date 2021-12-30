@@ -31,7 +31,7 @@ func main() {
 	allMethods := []string{"GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH"}
 
 	g := r.Group("/api")
-	g.Handle("(/?)$", handler.HealthCheck, "GET")
+	g.Handle("[/?]$", handler.HealthCheck, "GET")
 	g.Handle("/hello$", handler.Hello, "GET")
 
 	r.Handle(`^[/|]$`, handler.Index, "GET")
@@ -43,8 +43,9 @@ func main() {
 	r.Handle(`^/post-form$`, handler.PostForm, "GET", "POST")
 	r.Handle(`^/post-json$`, handler.PostJson, allMethods...)
 
-	r.Handle(`/[^/]+.html`, handler.HandleHTML, "GET")
-	r.Handle(`^/.*.[css|js|map|woff|woff2]$`, handler.HandleAsset, "GET")
+	r.Handle(`^/[^/]+.html$`, handler.HandleHTML, "GET")
+	r.Handle(`^/assets/css/[^/]+.html$`, handler.HandleHTML, "GET")
+	r.Handle(`^/assets/.*[css|js|map|woff|woff2]$`, handler.HandleAsset, "GET")
 
 	r.Handle(`/static/*`, router.StaticServer, "GET")
 

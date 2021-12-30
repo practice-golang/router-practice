@@ -89,7 +89,8 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Send()
 
 	for _, rt := range a.Routes {
-		log.Println("Route path regex:", rt.Pattern.String(), c.URL.Path)
+		matches := rt.Pattern.FindStringSubmatch(c.URL.Path)
+		log.Println("Route path regex:", rt.Pattern.String(), c.URL.Path, matches)
 		if matches := rt.Pattern.FindStringSubmatch(c.URL.Path); len(matches) > 0 {
 
 			if !rt.Methods[c.Method] {
