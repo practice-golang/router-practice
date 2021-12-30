@@ -110,8 +110,8 @@ func HandleAsset(c *router.Context) {
 	var err error
 
 	// If the file exists in the real storage, read real instead of embed.
-	storePath := "../html" + c.URL.Path
-	embedPath := "html" + c.URL.Path
+	storePath := StoreRoot + c.URL.Path
+	embedPath := EmbedRoot + c.URL.Path
 	if util.CheckFileExists(storePath) {
 		h, err = os.ReadFile(storePath) // Real storage
 	} else {

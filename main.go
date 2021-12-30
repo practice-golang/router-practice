@@ -44,7 +44,7 @@ func main() {
 	r.Handle(`^/post-json$`, handler.PostJson, allMethods...)
 
 	r.Handle(`/[^/]+.html`, handler.HandleHTML, "GET")
-	r.Handle(`^/.*.[css|js|map]$`, handler.HandleAsset, "GET")
+	r.Handle(`^/.*.[css|js|map|woff|woff2]$`, handler.HandleAsset, "GET")
 
 	r.Handle(`/static/*`, router.StaticServer, "GET")
 
