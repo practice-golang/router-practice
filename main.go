@@ -30,14 +30,14 @@ func main() {
 
 	allMethods := []string{"GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH"}
 
-	g := r.Group("/api")
-	g.Handle("[/?]$", handler.HealthCheck, "GET")
-	g.Handle("/hello$", handler.Hello, "GET")
+	g := r.Group(`^/api`)
+	g.Handle(`/?$`, handler.HealthCheck, "GET")
+	g.Handle(`/hello$`, handler.Hello, "GET")
 
-	r.Handle(`^[/|]$`, handler.Index, "GET")
+	r.Handle(`^/?$`, handler.Index, "GET")
 
 	r.Handle(`^/hello$`, handler.Hello, "GET", "POST")
-	r.Handle(`/hello/([\p{L}\d_]+)$`, handler.HelloParam, "GET")
+	r.Handle(`/hello/[\p{L}\d_]+$`, handler.HelloParam, "GET")
 
 	r.Handle(`/get-param$`, handler.GetParam, "GET")
 	r.Handle(`^/post-form$`, handler.PostForm, "GET", "POST")
