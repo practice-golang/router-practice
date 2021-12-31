@@ -34,10 +34,15 @@ func main() {
 	g.Handle(`/?$`, handler.HealthCheck, "GET")
 	g.Handle(`/hello$`, handler.Hello, "GET")
 
-	r.Handle(`^/?$`, handler.Index, "GET")
+	gh := r.Group(`^/hello`)
+	gh.Handle(`$`, handler.Hello, "GET", "POST")
+	gh.Handle(`/([\p{L}\d_]+)$`, handler.HelloParam, "GET")
 
-	r.Handle(`^/hello$`, handler.Hello, "GET", "POST")
-	r.Handle(`/hello/[\p{L}\d_]+$`, handler.HelloParam, "GET")
+	gm := r.Group(``, handler.HelloMiddleware)
+	gm.Handle(`/hi/([\p{L}\d_]+)$`, handler.HelloParam, "GET")
+
+	// HTML
+	r.Handle(`^/?$`, handler.Index, "GET")
 
 	r.Handle(`/get-param$`, handler.GetParam, "GET")
 	r.Handle(`^/post-form$`, handler.PostForm, "GET", "POST")

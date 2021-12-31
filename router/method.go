@@ -29,17 +29,20 @@ func New() *App {
 	return app
 }
 
-func (a *App) Group(prefix string) *RouteGroup {
+func (a *App) Group(prefix string, middleware ...Middleware) *RouteGroup {
 	group := &RouteGroup{
-		App:    a,
-		Prefix: prefix,
+		App:         a,
+		Prefix:      prefix,
+		Middlewares: middleware,
 	}
 
 	return group
 }
 
 func (g *RouteGroup) Handle(pattern string, handler Handler, methods ...string) {
+	g.App.Middlewares = g.Middlewares
 	g.App.Handle(g.Prefix+pattern, handler, methods...)
+	g.App.Middlewares = nil
 }
 
 func (a *App) Handle(pattern string, handler Handler, methods ...string) {
@@ -63,7 +66,7 @@ func (a *App) Handle(pattern string, handler Handler, methods ...string) {
 		}
 	}
 
-	route := Route{Pattern: re, Handler: handler, Methods: m}
+	route := Route{Pattern: re, Handler: handler, Methods: m, Middlewares: a.Middlewares}
 
 	a.Routes = append(a.Routes, route)
 }
@@ -104,6 +107,14 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 			if len(matches) > 1 {
 				c.Params = matches[1:]
+			}
+
+			for _, m := range rt.Middlewares {
+				err := m(c)
+				if err != nil {
+					log.Println("Middleware error:", err)
+					return
+				}
 			}
 
 			rt.Handler(c)

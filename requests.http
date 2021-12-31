@@ -13,6 +13,9 @@ GET {{uri}}/hello
 ### Hello world #2
 POST {{uri}}/hello
 
+### Hello world #3 - Middleware & cause error
+GET {{uri}}/hi/Nerd
+
 ### Hello people
 GET {{uri}}/hello/Patrick
 
