@@ -88,12 +88,16 @@ func HandleHTML(c *router.Context) {
 	var err error
 
 	// If the file exists in the real storage, read real instead of embed.
-	storePath := "../html" + c.URL.Path
-	embedPath := "html" + c.URL.Path
-	if util.CheckFileExists(storePath) {
-		h, err = os.ReadFile(storePath) // Real storage
-	} else {
-		h, err = router.Content.ReadFile(embedPath) // Embed storage
+	storePath := StoreRoot + c.URL.Path // Real storage
+	embedPath := EmbedRoot + c.URL.Path // Embed storage
+	switch true {
+	case util.CheckFileExists(storePath):
+		h, err = os.ReadFile(storePath)
+	case util.CheckFileExists(embedPath):
+		h, err = router.Content.ReadFile(embedPath)
+	default:
+		c.Text(http.StatusNotFound, "Not found")
+		return
 	}
 
 	if err != nil {
@@ -110,12 +114,16 @@ func HandleAsset(c *router.Context) {
 	var err error
 
 	// If the file exists in the real storage, read real instead of embed.
-	storePath := StoreRoot + c.URL.Path
-	embedPath := EmbedRoot + c.URL.Path
-	if util.CheckFileExists(storePath) {
-		h, err = os.ReadFile(storePath) // Real storage
-	} else {
-		h, err = router.Content.ReadFile(embedPath) // Embed storage
+	storePath := StoreRoot + c.URL.Path // Real storage
+	embedPath := EmbedRoot + c.URL.Path // Embed storage
+	switch true {
+	case util.CheckFileExists(storePath):
+		h, err = os.ReadFile(storePath)
+	case util.CheckFileExists(embedPath):
+		h, err = router.Content.ReadFile(embedPath)
+	default:
+		c.Text(http.StatusNotFound, "Not found")
+		return
 	}
 
 	if err != nil {

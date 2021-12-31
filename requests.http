@@ -43,8 +43,11 @@ Origin: http://localhost:4416
 ### HTML
 GET {{uri}}/hello.html
 
-### CSS
+### CSS - Not exists
 GET {{uri}}/assets/css/pure-min.css
+
+### CSS
+GET {{uri}}/assets/css/bootstrap.min.css
 
 ### JS
 GET {{uri}}/assets/js/knockout-3.5.1.min.js

@@ -1,11 +1,12 @@
 package util
 
-import "os"
+import (
+	"os"
+)
 
 func CheckFileExists(path string) (result bool) {
-	_, err := os.Stat(path)
-
-	if err == nil {
+	f, err := os.Stat(path)
+	if err == nil && f != nil {
 		result = true
 	} else {
 		result = false

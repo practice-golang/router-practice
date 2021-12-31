@@ -40,7 +40,7 @@ func (a *App) Group(prefix string, middleware ...Middleware) *RouteGroup {
 }
 
 func (g *RouteGroup) Handle(pattern string, handler Handler, methods ...string) {
-	g.App.Middlewares = g.Middlewares
+	g.App.Middlewares = append(g.App.Middlewares, g.Middlewares...)
 	g.App.Handle(g.Prefix+pattern, handler, methods...)
 	g.App.Middlewares = nil
 }
