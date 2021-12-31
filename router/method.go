@@ -53,8 +53,11 @@ func (a *App) Handle(pattern string, handler Handler, methods ...string) {
 			m["HEAD"] = true
 			m["POST"] = true
 			m["PUT"] = true
-			m["PATCH"] = true
 			m["DELETE"] = true
+			m["CONNECT"] = true
+			m["OPTIONS"] = true
+			m["TRACE"] = true
+			m["PATCH"] = true
 		default:
 			m[strings.ToUpper(method)] = true
 		}
