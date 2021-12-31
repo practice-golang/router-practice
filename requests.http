@@ -69,3 +69,13 @@ GET {{uri}}/api
 ### Group #2
 GET {{uri}}/api/hello
 
+
+### Sign in - JSON
+POST {{uri}}/signin HTTP/1.1
+content-type: application/json
+Origin: http://localhost:4416
+
+{
+    "name": "user",
+    "password": "1234"
+}
