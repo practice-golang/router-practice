@@ -10,7 +10,7 @@ import (
 )
 
 func setupKey() {
-	auth.Secret = "router-practice secret key"
+	auth.Secret = "practice-golang/router-practice secret"
 	auth.GenerateKey()
 }
 
