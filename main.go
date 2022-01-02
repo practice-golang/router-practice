@@ -19,6 +19,7 @@ var (
 
 func main() {
 
+	setupKey()
 	setupRouter()
 
 	logging.Object.Log().Timestamp().Str("listen", Uri+"\n").Send()

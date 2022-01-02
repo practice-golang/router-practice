@@ -76,6 +76,11 @@ content-type: application/json
 Origin: http://localhost:4416
 
 {
-    "name": "user",
+    "name": "Jason",
     "password": "1234"
 }
+
+### Sign in - JSON
+GET {{uri}}/restricted HTTP/1.1
+
+

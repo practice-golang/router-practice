@@ -52,15 +52,9 @@ func (a *App) Handle(pattern string, handler Handler, methods ...string) {
 	for _, method := range methods {
 		switch method {
 		case "*":
-			m["GET"] = true
-			m["HEAD"] = true
-			m["POST"] = true
-			m["PUT"] = true
-			m["DELETE"] = true
-			m["CONNECT"] = true
-			m["OPTIONS"] = true
-			m["TRACE"] = true
-			m["PATCH"] = true
+			for _, method := range AllMethods {
+				m[method] = true
+			}
 		default:
 			m[strings.ToUpper(method)] = true
 		}
@@ -96,8 +90,8 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	for _, rt := range a.Routes {
 		matches := rt.Pattern.FindStringSubmatch(c.URL.Path)
-		log.Println("Route path regex:", rt.Pattern.String(), c.URL.Path, matches)
-		if matches := rt.Pattern.FindStringSubmatch(c.URL.Path); len(matches) > 0 {
+		if len(matches) > 0 {
+			// log.Println("Route path regex:", rt.Pattern.String(), c.URL.Path, matches)
 
 			if !rt.Methods[c.Method] {
 				// a.MethodNotAllowed(c)
@@ -127,6 +121,13 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (c *Context) Text(code int, body string) {
 	c.ResponseWriter.Header().Set("Content-Type", "text/plain; charset=UTF-8")
+	c.WriteHeader(code)
+
+	c.ResponseWriter.Write([]byte(body))
+}
+
+func (c *Context) Json(code int, body string) {
+	c.ResponseWriter.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	c.WriteHeader(code)
 
 	c.ResponseWriter.Write([]byte(body))

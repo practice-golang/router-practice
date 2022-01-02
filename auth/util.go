@@ -1,0 +1,38 @@
+package auth
+
+import (
+	"reflect"
+
+	"gopkg.in/guregu/null.v4"
+)
+
+// ConvertToNullTypeHookFunc - https://github.com/mitchellh/mapstructure/issues/164
+func ConvertToNullTypeHookFunc(f reflect.Type, t reflect.Type, data interface{}) (interface{}, error) {
+	nullTypes := []reflect.Kind{reflect.String, reflect.Int64}
+
+	isNullTypes := false
+	for _, v := range nullTypes {
+		if f.Kind() != v {
+			isNullTypes = true
+			break
+		}
+	}
+
+	if !isNullTypes {
+		return data, nil
+	}
+
+	switch t {
+	case reflect.TypeOf(null.String{}):
+		d := null.NewString(data.(string), true)
+		return d, nil
+	case reflect.TypeOf(null.Int{}):
+		d := null.NewInt(int64(data.(float64)), true)
+		return d, nil
+	case reflect.TypeOf(null.Float{}):
+		d := null.NewFloat(data.(float64), true)
+		return d, nil
+	}
+
+	return data, nil
+}

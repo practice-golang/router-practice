@@ -33,5 +33,6 @@ type RouteGroup struct {
 type Context struct {
 	http.ResponseWriter
 	*http.Request
-	Params []string
+	Params   []string
+	AuthInfo interface{}
 }

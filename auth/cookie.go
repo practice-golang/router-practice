@@ -5,31 +5,36 @@ import (
 	"net/http"
 )
 
-func SetCookieHeader(w http.ResponseWriter, r *http.Request) {
-	c1 := http.Cookie{
-		Name:     "name",
-		Value:    "user",
+func SetCookieHeader(w http.ResponseWriter, token string, duration int64) {
+	session := http.Cookie{
+		Name:     "token",
+		Value:    token,
 		SameSite: http.SameSiteStrictMode,
+		MaxAge:   int(duration),
 		HttpOnly: true,
 	}
-	c2 := http.Cookie{
-		Name:     "session",
-		Value:    "hello world",
-		SameSite: http.SameSiteStrictMode,
-		MaxAge:   60 * 60 * 24 * 1,
-		HttpOnly: true,
-	}
-	w.Header().Set("Set-Cookie", c1.String())
-	w.Header().Add("Set-Cookie", c2.String())
+
+	w.Header().Add("Set-Cookie", session.String())
 }
 
+func ExpireCookie(w http.ResponseWriter) {
+	session := http.Cookie{
+		SameSite: http.SameSiteStrictMode,
+		MaxAge:   -1,
+		HttpOnly: true,
+	}
+
+	w.Header().Add("Set-Cookie", session.String())
+}
+
+// GetCookie - Not use
 func GetCookie(r *http.Request) {
-	session, err := r.Cookie("session")
+	token, err := r.Cookie("token")
 	if err != nil {
 		log.Println("GetCookie:", err)
 	}
 	cookies := r.Cookies()
 
-	log.Println(session)
+	log.Println(token)
 	log.Println(cookies)
 }
