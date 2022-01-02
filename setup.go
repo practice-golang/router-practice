@@ -28,6 +28,7 @@ func setupRouter() {
 	g := r.Group(`^/api`)
 	g.Handle(`/?$`, handler.HealthCheck, "GET")
 	g.Handle(`/hello$`, handler.Hello, "GET")
+	g.Handle(`/signin$`, handler.SigninAPI, "POST")
 
 	/* Group */
 	gh := r.Group(`^/hello`)
@@ -38,10 +39,15 @@ func setupRouter() {
 	gm := r.Group(``, handler.HelloMiddleware)
 	gm.Handle(`/hi/([\p{L}\d_]+)$`, handler.HelloParam, "GET")
 
-	/* Restricted */
-	r.Handle(`/signin$`, handler.Signin, "POST")
+	/* Restricted - Cookie */
+	r.Handle(`^/signin$`, handler.Signin, "POST")
 	gr := r.Group(``, handler.AuthMiddleware)
-	gr.Handle(`/restricted$`, handler.RestrictedHello, "GET")
+	gr.Handle(`^/restricted$`, handler.RestrictedHello, "GET")
+	gr.Handle(`^/signout$`, handler.SignOut, "GET")
+
+	/* Restricted - Header */
+	ga := r.Group(`^/api`, handler.AuthApiMiddleware)
+	ga.Handle(`/restricted$`, handler.RestrictedHello, "GET")
 
 	/* HTML */
 	r.Handle(`^/?$`, handler.Index, "GET")

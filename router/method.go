@@ -92,7 +92,6 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		matches := rt.Pattern.FindStringSubmatch(c.URL.Path)
 		if len(matches) > 0 {
 			// log.Println("Route path regex:", rt.Pattern.String(), c.URL.Path, matches)
-
 			if !rt.Methods[c.Method] {
 				// a.MethodNotAllowed(c)
 				a.DefaultRoute(c)
@@ -126,11 +125,18 @@ func (c *Context) Text(code int, body string) {
 	c.ResponseWriter.Write([]byte(body))
 }
 
-func (c *Context) Json(code int, body string) {
+// func (c *Context) Json(code int, body string) {
+func (c *Context) Json(code int, body interface{}) {
 	c.ResponseWriter.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	c.WriteHeader(code)
 
-	c.ResponseWriter.Write([]byte(body))
+	result, err := json.Marshal(body)
+	if err != nil {
+		log.Println("Json error:", err)
+		return
+	}
+
+	c.ResponseWriter.Write(result)
 }
 
 func (c *Context) Html(code int, body []byte) {

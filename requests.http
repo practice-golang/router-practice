@@ -63,12 +63,6 @@ GET {{uri}}/static/panic.png
 
 
 
-### Group #1
-GET {{uri}}/api
-
-### Group #2
-GET {{uri}}/api/hello
-
 
 ### Sign in - JSON
 POST {{uri}}/signin HTTP/1.1
@@ -80,7 +74,29 @@ Origin: http://localhost:4416
     "password": "1234"
 }
 
-### Sign in - JSON
+### Restricted
 GET {{uri}}/restricted HTTP/1.1
 
+### Sign out
+GET {{uri}}/signout HTTP/1.1
 
+
+### Group #1
+GET {{uri}}/api
+
+### Group #2
+GET {{uri}}/api/hello
+
+### Group #3 - Sign in
+POST {{uri}}/api/signin HTTP/1.1
+content-type: application/json
+Origin: http://localhost:4416
+
+{
+    "name": "Jason",
+    "password": "1234"
+}
+
+### Group #4 - Restricted
+GET {{uri}}/api/restricted HTTP/1.1
+Authorization: Bearer eyJhbGciOiJSUzM4NCIsImtpZCI6InJvdXRlci1wcmFjdGljZSBzZWNyZXQga2V5IiwidHlwIjoiSldUIn0.eyJleHAiOjE2NDE3NDM5NTQsImlhdCI6MTY0MTEzOTE1NCwiaXNzIjoicm91dGVyLXByYWN0aWNlIiwic3ViIjoiYXV0aCB0b2tlbiIsInRva2VuIjp7Im5hbWUiOiJKYXNvbiIsImlwLWFkZHIiOiIxMjcuMC4wLjE6MjkyNyIsInBsYXRmb3JtIjoiIiwiZHVyYXRpb24iOjYwNDgwMH19.1PGMlT8zKT1SNnszzp7hhuQ-OdHAJdX976ZdHoJqRMlKzPD4MFq-dpuHTDmvpAMo3s-toN-kjim3f-jPF-FmUxifmwIO25I1zMkwr20ximhcJMXWayauMBCYZsdfo1tcTbxKJZbQnl0E5f7JyTGoDsoESzy1F1bnNqdifDAc7P39Cz_XaSX9WHBEUUMc-wK8lROfseF834h3wcIENG5nKRH_pVQfUcvXRZVT7U5HTiqTOvX1T28FpWGrwav4P_4RKXJWNdo9aHMdqoVtFA6Ko-ZHZI9sagImeQDmQhTRfLvhwbBRjdhnCc9jI5xdNWuEZa9ay_ehOEh_kbC6vl-APQ
