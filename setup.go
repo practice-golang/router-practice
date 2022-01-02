@@ -5,6 +5,7 @@ import (
 	"router-practice/handler"
 	"router-practice/logging"
 	"router-practice/router"
+	"time"
 
 	"github.com/rs/cors"
 )
@@ -14,8 +15,28 @@ func setupKey() {
 	auth.GenerateKey()
 }
 
-func setupRouter() {
+func setupLogger() {
 	logging.SetupLogger()
+
+	go func() {
+		now := time.Now()
+		zone, i := now.Zone()
+		nextDay := now.AddDate(0, 0, 1).In(time.FixedZone(zone, i))
+		nextDay = time.Date(nextDay.Year(), nextDay.Month(), nextDay.Day(), 0, 0, 0, 0, nextDay.Location())
+		restTimeNextDay := time.Until(nextDay)
+		time.Sleep(restTimeNextDay)
+		for {
+			if time.Now().Format("15") == "00" {
+				logging.RenewLogger()
+				time.Sleep(24 * time.Hour)
+			} else {
+				time.Sleep(time.Second)
+			}
+		}
+	}()
+}
+
+func setupRouter() {
 
 	router.Content = Content
 	router.Static = Static

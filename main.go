@@ -19,6 +19,7 @@ var (
 
 func main() {
 
+	setupLogger()
 	setupKey()
 	setupRouter()
 

@@ -11,6 +11,7 @@ import (
 
 var (
 	Object zerolog.Logger
+	F      *os.File
 )
 
 func SetupLogger() {
@@ -18,10 +19,24 @@ func SetupLogger() {
 	zerolog.TimestampFieldName = "datetime"
 
 	fname := variable.ProgramName + "-" + time.Now().Format("20060102") + ".log"
-	f, _ := os.OpenFile(fname, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
-	// w := io.MultiWriter(os.Stdout, f)
-	w := io.MultiWriter(f)
-	// w := io.Writer(f)
+	F, _ = os.OpenFile(fname, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	// w := io.MultiWriter(os.Stdout, F)
+	w := io.MultiWriter(F)
+	// w := io.Writer(F)
+
+	Object = zerolog.New(w).With().Logger()
+}
+
+func RenewLogger() {
+	zerolog.TimeFieldFormat = "20060102150405"
+	zerolog.TimestampFieldName = "datetime"
+
+	fname := variable.ProgramName + "-" + time.Now().Format("20060102") + ".log"
+
+	F.Close()
+
+	F, _ = os.OpenFile(fname, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	w := io.MultiWriter(F)
 
 	Object = zerolog.New(w).With().Logger()
 }
