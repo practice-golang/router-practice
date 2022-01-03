@@ -86,9 +86,9 @@ func HandleHTML(c *router.Context) {
 	storePath := StoreRoot + c.URL.Path // Real storage
 	embedPath := EmbedRoot + c.URL.Path // Embed storage
 	switch true {
-	case util.CheckFileExists(storePath):
+	case util.CheckFileExists(storePath, false):
 		h, err = os.ReadFile(storePath)
-	case util.CheckFileExists(embedPath):
+	case util.CheckFileExists(embedPath, true):
 		h, err = router.Content.ReadFile(embedPath)
 	default:
 		c.Text(http.StatusNotFound, "Not found")
@@ -112,9 +112,9 @@ func HandleAsset(c *router.Context) {
 	storePath := StoreRoot + c.URL.Path // Real storage
 	embedPath := EmbedRoot + c.URL.Path // Embed storage
 	switch true {
-	case util.CheckFileExists(storePath):
+	case util.CheckFileExists(storePath, false):
 		h, err = os.ReadFile(storePath)
-	case util.CheckFileExists(embedPath):
+	case util.CheckFileExists(embedPath, true):
 		h, err = router.Content.ReadFile(embedPath)
 	default:
 		c.Text(http.StatusNotFound, "Not found")

@@ -28,7 +28,7 @@ func TestCheckFileExists(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotResult := CheckFileExists(tt.args.path); gotResult != tt.wantResult {
+			if gotResult := CheckFileExists(tt.args.path, false); gotResult != tt.wantResult {
 				t.Errorf("CheckFileExists() = %v, want %v", gotResult, tt.wantResult)
 			}
 		})

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"bytes"
+	"embed"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -15,6 +16,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"golang.org/x/net/websocket"
 )
+
+//go:embed embed_test/*
+var fncEMBED embed.FS
 
 func Test_Index(t *testing.T) {
 	type args struct {
@@ -34,11 +38,52 @@ func Test_Index(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Test_Index_embed",
+			args: args{
+				c: &router.Context{
+					Request:        httptest.NewRequest("GET", "/", nil),
+					ResponseWriter: http.ResponseWriter(httptest.NewRecorder()),
+				},
+			},
+		},
+		{
+			name: "Test_Index_notfound",
+			args: args{
+				c: &router.Context{
+					Request:        httptest.NewRequest("GET", "/", nil),
+					ResponseWriter: http.ResponseWriter(httptest.NewRecorder()),
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			Index(tt.args.c)
+			storeRootBackup := StoreRoot
+			embedRootBackup := EmbedRoot
+			compareFilePath := "../html/index.html"
+			want, err := ioutil.ReadFile(compareFilePath)
+			if err != nil {
+				t.Error("Reference file htm not found")
+			}
+
+			if tt.name == "Test_Index_embed" {
+				StoreRoot = "./not-found"
+				EmbedRoot = "embed_test"
+				router.Content = fncEMBED
+				// tt.args.c.URL.Path = "/index.html"
+				want = []byte("Hello embedded world")
+			}
+			if tt.name == "Test_Index_notfound" {
+				StoreRoot = "./not-found"
+				EmbedRoot = "not-found"
+				want = []byte("Not found")
+			}
 			// HandleHTML(tt.args.c)
+			Index(tt.args.c)
+
+			StoreRoot = storeRootBackup
+			EmbedRoot = embedRootBackup
 
 			res := tt.args.c.ResponseWriter.(*httptest.ResponseRecorder).Result()
 			defer res.Body.Close()
@@ -47,10 +92,9 @@ func Test_Index(t *testing.T) {
 				t.Errorf("expected error to be nil got %v", err)
 			}
 
-			htm, _ := ioutil.ReadFile("../html/index.html")
-			htm = bytes.ReplaceAll(htm, []byte("#USERNAME"), []byte("Robert Garcia"))
+			want = bytes.ReplaceAll(want, []byte("#USERNAME"), []byte("Robert Garcia"))
 
-			require.Equal(t, htm, data, "html/index.html not equal")
+			require.Equal(t, want, data, tt.name+" not equal"+"embed_test / "+tt.args.c.URL.Path)
 		})
 	}
 }
@@ -344,35 +388,59 @@ func Test_HandleAsset(t *testing.T) {
 			name: "Test_HandleAsset",
 			args: args{
 				c: &router.Context{
-					Request:        httptest.NewRequest("GET", "/not-found", nil),
-					ResponseWriter: http.ResponseWriter(httptest.NewRecorder()),
-				},
-				want: []byte("Not found"),
-			},
-		},
-		{
-			name: "Test_HandleAsset",
-			args: args{
-				c: &router.Context{
 					Request:        httptest.NewRequest("GET", "/assets/css/bootstrap.min.css", nil),
 					ResponseWriter: http.ResponseWriter(httptest.NewRecorder()),
 				},
 				want: css,
 			},
 		},
+		{
+			name: "Test_HandleAsset_embed",
+			args: args{
+				c: &router.Context{
+					Request:        httptest.NewRequest("GET", "/index.html", nil),
+					ResponseWriter: http.ResponseWriter(httptest.NewRecorder()),
+				},
+				want: []byte("Hello embedded world"),
+			},
+		},
+		{
+			name: "Test_HandleAsset_notfound",
+			args: args{
+				c: &router.Context{
+					Request:        httptest.NewRequest("GET", "/not-found", nil),
+					ResponseWriter: http.ResponseWriter(httptest.NewRecorder()),
+				},
+				want: []byte("Not found"),
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			storeRootBackup := StoreRoot
+			embedRootBackup := EmbedRoot
+
+			if tt.name == "Test_HandleAsset_embed" {
+				StoreRoot = "./not-found"
+				EmbedRoot = "embed_test"
+				router.Content = fncEMBED
+				tt.args.c.URL.Path = "/index.html"
+			}
+
 			HandleAsset(tt.args.c)
 
 			res := tt.args.c.ResponseWriter.(*httptest.ResponseRecorder).Result()
 			defer res.Body.Close()
+
 			data, err := ioutil.ReadAll(res.Body)
 			if err != nil {
 				t.Errorf("expected error to be nil got %v", err)
 			}
 
-			require.Equal(t, tt.args.want, data, "HealthCheck not equal")
+			StoreRoot = storeRootBackup
+			EmbedRoot = embedRootBackup
+
+			require.Equal(t, tt.args.want, data, tt.name+" not equal")
 		})
 	}
 }
