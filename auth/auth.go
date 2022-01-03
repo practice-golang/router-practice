@@ -49,7 +49,7 @@ func GetClaim(r http.Request, from string) (model.AuthInfo, error) {
 
 	_, result, err = ParseToken(token)
 	if err != nil {
-		log.Println("GetCookie parse token:", err)
+		// log.Println("GetCookie parse token:", err)
 		return model.AuthInfo{}, err
 	}
 

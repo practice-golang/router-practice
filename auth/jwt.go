@@ -95,7 +95,7 @@ func ParseToken(payloadSTR string) (jwt.Token, model.AuthInfo, error) {
 		jwt.WithKeySet(KeySET),
 	)
 	if err != nil {
-		log.Printf("parse payload: %s\n", err)
+		log.Printf("ParseToken parse payload: %s\n", err)
 		return nil, model.AuthInfo{}, err
 	}
 
@@ -107,25 +107,25 @@ func ParseToken(payloadSTR string) (jwt.Token, model.AuthInfo, error) {
 	}
 	decoder, err := mapstructure.NewDecoder(cfg)
 	if err != nil {
-		log.Printf("decoder set: %s\n", err)
+		log.Printf("ParseToken decoder set: %s\n", err)
 		return nil, model.AuthInfo{}, err
 	}
 
 	claim, valid := token.Get("token")
 	if !valid {
-		log.Printf("token to claim: %s\n", err)
+		log.Printf("ParseToken token to claim: %s\n", err)
 		return nil, model.AuthInfo{}, err
 	}
 
 	err = decoder.Decode(claim)
 	if err != nil {
-		log.Printf("decode claim to struct: %s\n", err)
+		log.Printf("ParseToken decode claim to struct: %s\n", err)
 		return nil, model.AuthInfo{}, err
 	}
 
 	now := time.Now()
 	if token.Expiration().Before(now) {
-		log.Printf("token expired: %s\n", err)
+		log.Printf("ParseToken token expired: %s\n", err)
 		return nil, model.AuthInfo{}, errors.New("token expired")
 	}
 

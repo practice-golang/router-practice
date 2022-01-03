@@ -19,7 +19,7 @@ func AuthMiddleware(c *router.Context) error {
 	if err != nil {
 		auth.ExpireCookie(c.ResponseWriter)
 
-		log.Println("AuthMiddleware:", err)
+		// log.Println("AuthMiddleware:", err)
 		c.Text(http.StatusUnauthorized, "Auth error")
 
 		return err
