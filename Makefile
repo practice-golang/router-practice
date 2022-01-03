@@ -14,5 +14,8 @@ test:
 test-v:
 	go test -v ./...
 
+cover:
+	go test -cover ./...
+
 clean:
 	rm -rf ./bin/*
