@@ -8,6 +8,7 @@ import (
 	"router-practice/model"
 	"router-practice/router"
 	"router-practice/util"
+	"router-practice/wsock"
 
 	"github.com/goccy/go-json"
 )
@@ -131,4 +132,12 @@ func HandleAsset(c *router.Context) {
 	}
 
 	c.File(http.StatusOK, h)
+}
+
+func HandleWebsocketEcho(c *router.Context) {
+	wsock.SockEcho(c.Request, c.ResponseWriter)
+}
+
+func HandleWebsocketChat(c *router.Context) {
+	wsock.SockChat(c.Request, c.ResponseWriter)
 }

@@ -84,6 +84,10 @@ func setupRouter() {
 	/* Static */
 	r.Handle(`/static/*`, router.StaticServer, "GET")
 
+	/* Websocket - /ws.html */
+	r.Handle(`/ws-echo`, handler.HandleWebsocketEcho, "GET")
+	r.Handle(`/ws-chat`, handler.HandleWebsocketChat, "GET")
+
 	ServerHandler = cors.Default().Handler(r)
 	// c := cors.New(cors.Options{
 	// 	AllowedOrigins:   []string{"http://"+listen},

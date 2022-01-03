@@ -18,4 +18,4 @@
 * https://benhoyt.com/writings/go-routing
 
 ## Todo list for taste
-* websocket - https://github.com/olahol/melody
+* websocket

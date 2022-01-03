@@ -13,20 +13,22 @@ var Content embed.FS
 var Static embed.FS
 
 var (
-	Uri           string = "localhost:4416"
+	Port          string = "4416"
+	Address       string = "localhost"
 	ServerHandler http.Handler
 )
 
 func main() {
+	uri := Address + ":" + Port
 
 	setupLogger()
 	setupKey()
 	setupRouter()
 
-	logging.Object.Log().Timestamp().Str("listen", Uri+"\n").Send()
-	println("Listen", Uri)
+	logging.Object.Log().Timestamp().Str("listen", Address+"\n").Send()
+	println("Listen", uri)
 
-	err := http.ListenAndServe(Uri, ServerHandler)
+	err := http.ListenAndServe(uri, ServerHandler)
 	if err != nil {
 		logging.Object.Warn().Err(err).Timestamp().Msg("Server start failed")
 	}
