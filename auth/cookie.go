@@ -8,7 +8,7 @@ func SetCookieHeader(w http.ResponseWriter, token string, duration int64) {
 	session := http.Cookie{
 		Name:     "token",
 		Value:    token,
-		SameSite: http.SameSiteStrictMode,
+		SameSite: http.SameSiteNoneMode,
 		MaxAge:   int(duration),
 		HttpOnly: true,
 	}
