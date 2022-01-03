@@ -325,3 +325,51 @@ func Test_PostJson(t *testing.T) {
 		})
 	}
 }
+
+func Test_HandleAsset(t *testing.T) {
+	css, _ := ioutil.ReadFile("../html/assets/css/bootstrap.min.css")
+	type args struct {
+		c    *router.Context
+		r    http.Request
+		want []byte
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "Test_HandleAsset",
+			args: args{
+				c: &router.Context{
+					Request:        httptest.NewRequest("GET", "/not-found", nil),
+					ResponseWriter: http.ResponseWriter(httptest.NewRecorder()),
+				},
+				want: []byte("Not found"),
+			},
+		},
+		{
+			name: "Test_HandleAsset",
+			args: args{
+				c: &router.Context{
+					Request:        httptest.NewRequest("GET", "/assets/css/bootstrap.min.css", nil),
+					ResponseWriter: http.ResponseWriter(httptest.NewRecorder()),
+				},
+				want: css,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			HandleAsset(tt.args.c)
+
+			res := tt.args.c.ResponseWriter.(*httptest.ResponseRecorder).Result()
+			defer res.Body.Close()
+			data, err := ioutil.ReadAll(res.Body)
+			if err != nil {
+				t.Errorf("expected error to be nil got %v", err)
+			}
+
+			require.Equal(t, tt.args.want, data, "HealthCheck not equal")
+		})
+	}
+}
