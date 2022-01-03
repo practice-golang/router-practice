@@ -19,7 +19,7 @@ func Publisher() {
 		case msg := <-Message:
 			for _, worker := range WebSockerWorkers {
 				if worker.conn != nil {
-					log.Println("Send message to worker #:", worker.Idx)
+					// log.Println("Send message to worker #:", worker.Idx)
 					worker.msgCH <- msg
 				}
 			}
@@ -65,7 +65,7 @@ func SockChat(r *http.Request, w http.ResponseWriter) {
 		for {
 			select {
 			case msg := <-worker.msgCH:
-				log.Println("#", worker.Idx, "Received:", msg)
+				// log.Println("#", worker.Idx, "Received:", msg)
 				err = wsutil.WriteServerMessage(worker.conn, ws.OpText, []byte(msg))
 				if err != nil {
 					log.Println("ws WriteServerMessage:", err)
