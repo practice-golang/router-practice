@@ -10,6 +10,7 @@ require (
 	github.com/rs/cors v1.8.2
 	github.com/rs/zerolog v1.26.1
 	github.com/stretchr/testify v1.7.0
+	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d
 	gopkg.in/guregu/null.v4 v4.0.0
 )
 

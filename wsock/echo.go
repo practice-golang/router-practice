@@ -8,7 +8,7 @@ import (
 	"github.com/gobwas/ws/wsutil"
 )
 
-func WebSocketEcho(r *http.Request, w http.ResponseWriter) {
+func WebSocketEcho(w http.ResponseWriter, r *http.Request) {
 	conn, _, _, err := ws.UpgradeHTTP(r, w)
 	if err != nil {
 		log.Println("ws UpgradeHTTP:", err)

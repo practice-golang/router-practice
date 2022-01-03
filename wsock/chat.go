@@ -8,7 +8,7 @@ import (
 	"github.com/gobwas/ws/wsutil"
 )
 
-var WebSockerWorkers map[uint64]WebSocketChatWorker = map[uint64]WebSocketChatWorker{}
+var WSockWorkers map[uint64]WebSocketChatWorker = map[uint64]WebSocketChatWorker{}
 var Message chan string
 var Idx uint64 = 0
 
@@ -17,7 +17,7 @@ func Publisher() {
 	for {
 		select {
 		case msg := <-Message:
-			for _, worker := range WebSockerWorkers {
+			for _, worker := range WSockWorkers {
 				if worker.conn != nil {
 					// log.Println("Send message to worker #:", worker.Idx)
 					worker.msgCH <- msg
@@ -27,7 +27,7 @@ func Publisher() {
 	}
 }
 
-func WebSocketChat(r *http.Request, w http.ResponseWriter) {
+func WebSocketChat(w http.ResponseWriter, r *http.Request) {
 	var err error
 	worker := WebSocketChatWorker{}
 	worker.msgCH = make(chan string, 10)
@@ -39,7 +39,7 @@ func WebSocketChat(r *http.Request, w http.ResponseWriter) {
 	idx := Idx
 	worker.Idx = idx
 	Idx++
-	WebSockerWorkers[idx] = worker
+	WSockWorkers[idx] = worker
 
 	// Publisher or Broadcaster
 	go Publisher()
@@ -47,7 +47,7 @@ func WebSocketChat(r *http.Request, w http.ResponseWriter) {
 	// Publish message to all workers
 	go func() {
 		defer func() {
-			WebSockerWorkers[idx] = WebSocketChatWorker{}
+			WSockWorkers[idx] = WebSocketChatWorker{}
 			(worker.conn).Close()
 		}()
 		for {

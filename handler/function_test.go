@@ -3,14 +3,17 @@ package handler
 import (
 	"bytes"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"router-practice/router"
+	"strings"
 	"testing"
 
 	"github.com/goccy/go-json"
 	"github.com/stretchr/testify/require"
+	"golang.org/x/net/websocket"
 )
 
 func Test_Index(t *testing.T) {
@@ -372,4 +375,59 @@ func Test_HandleAsset(t *testing.T) {
 			require.Equal(t, tt.args.want, data, "HealthCheck not equal")
 		})
 	}
+}
+
+func Test_WebsocketEcho(t *testing.T) {
+	t.Run("WebsocketEcho", func(t *testing.T) {
+		serverHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			c := &router.Context{Request: r, ResponseWriter: w}
+			HandleWebsocketEcho(c)
+		})
+		s := httptest.NewServer(serverHandler)
+		defer s.Close()
+
+		u := "ws" + strings.TrimPrefix(s.URL, "http")
+
+		w, err := websocket.Dial(u, "", s.URL)
+		if err != nil {
+			t.Errorf("Dial error %v", err)
+		}
+
+		msg := []byte("Hello")
+
+		i, err := w.Write(msg)
+		if err != nil {
+			t.Errorf("Write error %v", err)
+		}
+
+		require.Equal(t, len(msg), i, "WebsocketEcho not equal")
+		log.Println(i)
+	})
+}
+
+func Test_WebsocketChat(t *testing.T) {
+	t.Run("WebsocketChat", func(t *testing.T) {
+		serverHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			c := &router.Context{Request: r, ResponseWriter: w}
+			HandleWebsocketChat(c)
+		})
+		s := httptest.NewServer(serverHandler)
+		defer s.Close()
+
+		u := "ws" + strings.TrimPrefix(s.URL, "http")
+
+		w, err := websocket.Dial(u, "", s.URL)
+		if err != nil {
+			t.Errorf("Dial error %v", err)
+		}
+
+		msg := []byte("Hello")
+
+		i, err := w.Write(msg)
+		if err != nil {
+			t.Errorf("Write error %v", err)
+		}
+
+		require.Equal(t, len(msg), i, "WebsocketChat not equal")
+	})
 }

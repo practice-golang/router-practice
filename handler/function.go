@@ -129,9 +129,9 @@ func HandleAsset(c *router.Context) {
 }
 
 func HandleWebsocketEcho(c *router.Context) {
-	wsock.WebSocketEcho(c.Request, c.ResponseWriter)
+	wsock.WebSocketEcho(c.ResponseWriter, c.Request)
 }
 
 func HandleWebsocketChat(c *router.Context) {
-	wsock.WebSocketChat(c.Request, c.ResponseWriter)
+	wsock.WebSocketChat(c.ResponseWriter, c.Request)
 }
