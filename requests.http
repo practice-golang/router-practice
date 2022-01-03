@@ -28,7 +28,7 @@ GET {{uri}}/get-param?name=Patrick&age=888
 ### POST - form
 POST {{uri}}/post-form HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
-Origin: http://localhost:4416
+Origin: {{uri}}
 
 name=john&password=12345
 
@@ -36,7 +36,7 @@ name=john&password=12345
 ### POST - JSON
 POST {{uri}}/post-json HTTP/1.1
 content-type: application/json
-Origin: http://localhost:4416
+Origin: {{uri}}
 
 {
     "name": "John",
@@ -70,7 +70,7 @@ GET {{uri}}/static/panic.png
 ### Sign in - JSON
 POST {{uri}}/signin HTTP/1.1
 content-type: application/json
-Origin: http://localhost:4416
+Origin: {{uri}}
 
 {
     "name": "Jason",
@@ -94,7 +94,7 @@ GET {{uri}}/api/hello
 ### Group #3 - Sign in
 POST {{uri}}/api/signin HTTP/1.1
 content-type: application/json
-Origin: http://localhost:4416
+Origin: {{uri}}
 
 {
     "name": "Jason",
