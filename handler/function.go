@@ -23,9 +23,10 @@ func HealthCheck(c *router.Context) {
 }
 
 func Hello(c *router.Context) {
-	if c.Method == "GET" {
+	switch c.Method {
+	case http.MethodGet:
 		c.Text(http.StatusOK, "Hello world GET")
-	} else if c.Method == "POST" {
+	case http.MethodPost:
 		c.Text(http.StatusOK, "Hello world POST")
 	}
 }
@@ -54,9 +55,9 @@ func PostForm(c *router.Context) {
 	result := ""
 
 	switch c.Method {
-	case "GET":
+	case http.MethodGet:
 		result = "Hello world GET"
-	case "POST":
+	case http.MethodPost:
 		c.ParseForm()
 		for k := range c.Form {
 			result += k + "=" + c.FormValue(k) + "\n"
