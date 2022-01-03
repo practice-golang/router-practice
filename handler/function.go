@@ -75,13 +75,7 @@ func PostJson(c *router.Context) {
 		return
 	}
 
-	result, err := json.Marshal(user)
-	if err != nil {
-		c.Text(http.StatusBadRequest, err.Error())
-		return
-	}
-
-	c.Text(http.StatusOK, string(result))
+	c.Json(http.StatusOK, user)
 }
 
 func HandleHTML(c *router.Context) {
