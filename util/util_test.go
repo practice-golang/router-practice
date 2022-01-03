@@ -1,6 +1,13 @@
 package util
 
-import "testing"
+import (
+	"embed"
+	"router-practice/router"
+	"testing"
+)
+
+//go:embed embed_test/*
+var fncEMBED embed.FS
 
 func TestCheckFileExists(t *testing.T) {
 	type args struct {
@@ -25,10 +32,23 @@ func TestCheckFileExists(t *testing.T) {
 			},
 			wantResult: true,
 		},
+		{
+			name: "CheckFileExists_embed",
+			args: args{
+				path: "embed_test/sample.txt",
+			},
+			wantResult: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotResult := CheckFileExists(tt.args.path, false); gotResult != tt.wantResult {
+			isEmbed := false
+			if tt.name == "CheckFileExists_embed" {
+				isEmbed = true
+				router.Content = fncEMBED
+			}
+
+			if gotResult := CheckFileExists(tt.args.path, isEmbed); gotResult != tt.wantResult {
 				t.Errorf("CheckFileExists() = %v, want %v", gotResult, tt.wantResult)
 			}
 		})
