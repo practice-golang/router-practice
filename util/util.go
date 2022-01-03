@@ -1,21 +1,19 @@
 package util
 
 import (
+	"io/fs"
 	"os"
-	"path/filepath"
 	"router-practice/router"
 )
 
 func CheckFileExists(path string, isEmbed bool) (result bool) {
 	switch isEmbed {
 	case true:
-		fname := filepath.Base(path)
-		dir, _ := router.Content.ReadDir(filepath.Dir(path))
-		for _, f := range dir {
-			if f.Name() == fname {
-				result = true
-				break
-			}
+		ef, err := fs.Stat(router.Content, path)
+		if err == nil && ef != nil {
+			result = true
+		} else {
+			result = false
 		}
 		break
 	case false:

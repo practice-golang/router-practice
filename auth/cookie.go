@@ -18,9 +18,8 @@ func SetCookieHeader(w http.ResponseWriter, token string, duration int64) {
 
 func ExpireCookie(w http.ResponseWriter) {
 	session := http.Cookie{
-		SameSite: http.SameSiteStrictMode,
-		MaxAge:   -1,
-		HttpOnly: true,
+		Name:   "token",
+		MaxAge: 0,
 	}
 
 	w.Header().Add("Set-Cookie", session.String())

@@ -27,5 +27,5 @@ func Test_ExpireCookie(t *testing.T) {
 	defer r.Body.Close()
 
 	data := r.Cookies()
-	require.Equal(t, data, []*http.Cookie{})
+	require.Equal(t, data, []*http.Cookie{{Name: "token", MaxAge: 0, Raw: "token="}})
 }
