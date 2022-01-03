@@ -3,7 +3,7 @@
 ## Practice what
 * own router, group-router
 * regular expression
-* tooling usage: rs/cors, rs/zerolog, mitchellh/gox
+* tooling usage: rs/cors, rs/zerolog, mitchellh/gox, gobwas/ws
 
 ## Build
 * see `Makefile`
@@ -16,6 +16,3 @@
 
 ## Other
 * https://benhoyt.com/writings/go-routing
-
-## Todo list for taste
-* websocket
