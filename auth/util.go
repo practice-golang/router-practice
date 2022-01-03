@@ -27,8 +27,17 @@ func ConvertToNullTypeHookFunc(f reflect.Type, t reflect.Type, data interface{})
 		d := null.NewString(data.(string), true)
 		return d, nil
 	case reflect.TypeOf(null.Int{}):
-		d := null.NewInt(int64(data.(float64)), true)
-		return d, nil
+		switch data.(type) {
+		case int:
+			d := null.NewInt(int64(data.(int)), true)
+			return d, nil
+		case int64:
+			d := null.NewInt(data.(int64), true)
+			return d, nil
+		case float64:
+			d := null.NewInt(int64(data.(float64)), true)
+			return d, nil
+		}
 	case reflect.TypeOf(null.Float{}):
 		d := null.NewFloat(data.(float64), true)
 		return d, nil

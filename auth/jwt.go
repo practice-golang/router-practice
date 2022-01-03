@@ -22,19 +22,19 @@ var KeySET jwk.Set
 var RealKey jwk.Key
 
 // GenerateKey - 키 생성
-func GenerateKey() {
+func GenerateKey() error {
 	// log.Println("alg/key:", Alg, Secret)
 
 	privKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		log.Printf("failed to generate private key: %s\n", err)
-		return
+		return err
 	}
 
 	pubKey, err := jwk.New(privKey.PublicKey)
 	if err != nil {
 		fmt.Printf("failed to create JWK: %s\n", err)
-		return
+		return err
 	}
 
 	pubKey.Set(jwk.AlgorithmKey, Alg)
@@ -51,11 +51,13 @@ func GenerateKey() {
 	RealKey, err = jwk.New(privKey)
 	if err != nil {
 		log.Printf("failed to create JWK: %s\n", err)
-		return
+		return err
 	}
 
 	RealKey.Set(jwk.KeyIDKey, Secret)
 	RealKey.Set(jwk.AlgorithmKey, Alg)
+
+	return nil
 }
 
 // GenerateToken - 토큰 생성
@@ -72,8 +74,6 @@ func GenerateToken(authinfo model.AuthInfo) (string, error) {
 		log.Printf("failed to begin to build: %s\n", err)
 		return "", err
 	}
-
-	// token.Set("token", authinfo)
 
 	signed, err := jwt.Sign(token, Alg, RealKey)
 	if err != nil {

@@ -15,8 +15,8 @@ type SignIn struct {
 }
 
 type AuthInfo struct {
-	Name     null.String `json:"name"`
-	IpAddr   null.String `json:"ip-addr"`
-	Platform null.String `json:"platform"`
-	Duration null.Int    `json:"duration"`
+	Name     null.String `json:"name"     mapstructure:"name"`
+	IpAddr   null.String `json:"ip-addr"  mapstructure:"ip-addr"`
+	Platform null.String `json:"platform" mapstructure:"platform"`
+	Duration null.Int    `json:"duration" mapstructure:"duration"`
 }

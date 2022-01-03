@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"log"
 	"net/http"
 )
 
@@ -28,13 +27,13 @@ func ExpireCookie(w http.ResponseWriter) {
 }
 
 // GetCookie - Not use
-func GetCookie(r *http.Request) {
-	token, err := r.Cookie("token")
-	if err != nil {
-		log.Println("GetCookie:", err)
-	}
-	cookies := r.Cookies()
+// func GetCookie(r *http.Request) {
+// 	token, err := r.Cookie("token")
+// 	if err != nil {
+// 		log.Println("GetCookie:", err)
+// 	}
+// 	cookies := r.Cookies()
 
-	log.Println(token)
-	log.Println(cookies)
-}
+// 	log.Println(token)
+// 	log.Println(cookies)
+// }

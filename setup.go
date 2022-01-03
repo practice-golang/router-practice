@@ -12,7 +12,11 @@ import (
 
 func setupKey() {
 	auth.Secret = "practice-golang/router-practice secret"
-	auth.GenerateKey()
+	err := auth.GenerateKey()
+
+	if err != nil {
+		panic(err)
+	}
 }
 
 func setupLogger() {
