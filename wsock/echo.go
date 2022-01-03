@@ -8,7 +8,7 @@ import (
 	"github.com/gobwas/ws/wsutil"
 )
 
-func SockEcho(r *http.Request, w http.ResponseWriter) {
+func WebSocketEcho(r *http.Request, w http.ResponseWriter) {
 	conn, _, _, err := ws.UpgradeHTTP(r, w)
 	if err != nil {
 		log.Println("ws UpgradeHTTP:", err)
@@ -20,6 +20,7 @@ func SockEcho(r *http.Request, w http.ResponseWriter) {
 			msg, op, err := wsutil.ReadClientData(conn)
 			if err != nil {
 				log.Println("ws ReadClientData:", err)
+				break
 			}
 
 			msg = append([]byte("From server: "), msg...)

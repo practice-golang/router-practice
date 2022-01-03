@@ -27,7 +27,7 @@ func Publisher() {
 	}
 }
 
-func SockChat(r *http.Request, w http.ResponseWriter) {
+func WebSocketChat(r *http.Request, w http.ResponseWriter) {
 	var err error
 	worker := WebSocketChatWorker{}
 	worker.msgCH = make(chan string, 10)
