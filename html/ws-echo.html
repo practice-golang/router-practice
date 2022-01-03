@@ -11,12 +11,18 @@
     <pre id="chat"></pre>
     <input placeholder="Speak" id="text" type="text">
 </body>
+
 <script>
     const url = "ws://" + window.location.host + "/ws-echo"
     const ws = new WebSocket(url)
 
     const chat = document.getElementById("chat")
     const text = document.getElementById("text")
+
+    ws.onclose = () => {
+        document.querySelector("#text").disabled = true
+        alert("Connection closed")
+    }
 
     ws.onmessage = function (msg) {
         const line = msg.data + "\n"
