@@ -2,7 +2,7 @@
 
 ## Practice what
 * own router, group-router
-* regular expression
+* regular expression, testing
 * tooling usage: rs/cors, rs/zerolog, mitchellh/gox, gobwas/ws
 
 ## Build
