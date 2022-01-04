@@ -35,10 +35,10 @@ func Test_main(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			Address = "localhost"
-			Port = "4416"
+			Port = "8080"
 			go main()
 
-			resp, err := http.Get("http://localhost:4416/hello")
+			resp, err := http.Get("http://localhost:8080/hello")
 			if err != nil {
 				t.Fatal("http.Get", err)
 			}
