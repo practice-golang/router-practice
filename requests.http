@@ -67,7 +67,7 @@ GET {{uri}}/static/panic.png
 
 
 
-### Sign in - JSON
+### Sign in - JSON, Cookie
 POST {{uri}}/signin HTTP/1.1
 content-type: application/json
 Origin: {{uri}}
@@ -91,7 +91,7 @@ GET {{uri}}/api
 ### Group #2
 GET {{uri}}/api/hello
 
-### Group #3 - Sign in
+### Group #3 - Sign in, Bearer
 POST {{uri}}/api/signin HTTP/1.1
 content-type: application/json
 Origin: {{uri}}

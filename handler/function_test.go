@@ -23,7 +23,6 @@ var fncEMBED embed.FS
 func Test_Index(t *testing.T) {
 	type args struct {
 		c *router.Context
-		r http.Request
 	}
 	tests := []struct {
 		name string
@@ -102,7 +101,6 @@ func Test_Index(t *testing.T) {
 func Test_HealthCheck(t *testing.T) {
 	type args struct {
 		c *router.Context
-		r http.Request
 	}
 	tests := []struct {
 		name string
@@ -137,7 +135,6 @@ func Test_HealthCheck(t *testing.T) {
 func Test_Hello(t *testing.T) {
 	type args struct {
 		c    *router.Context
-		r    http.Request
 		want []byte
 	}
 	tests := []struct {
@@ -194,7 +191,6 @@ func Test_Hello(t *testing.T) {
 func Test_HelloParam(t *testing.T) {
 	type args struct {
 		c    *router.Context
-		r    http.Request
 		want []byte
 	}
 	tests := []struct {
@@ -242,7 +238,6 @@ func Test_HelloParam(t *testing.T) {
 func Test_GetParam(t *testing.T) {
 	type args struct {
 		c    *router.Context
-		r    http.Request
 		want []byte
 	}
 	tests := []struct {
@@ -279,7 +274,6 @@ func Test_GetParam(t *testing.T) {
 func Test_PostForm(t *testing.T) {
 	type args struct {
 		c    *router.Context
-		r    http.Request
 		want []byte
 	}
 	tests := []struct {
@@ -339,7 +333,6 @@ func Test_PostJson(t *testing.T) {
 
 	type args struct {
 		c    *router.Context
-		r    http.Request
 		want []byte
 	}
 	tests := []struct {
