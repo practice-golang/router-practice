@@ -106,13 +106,21 @@ func Test_GetClaim(t *testing.T) {
 			})
 			tt.args.r_header.Header.Add("Authorization", "Bearer "+token)
 
-			got, err := GetClaim(tt.args.r_cookie, tt.args.from_cookie)
+			gotCookie, err := GetClaim(tt.args.r_cookie, tt.args.from_cookie)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetClaim() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("GetClaim()\nerror = %v\nwants = %v", got, tt.want)
+			if !reflect.DeepEqual(gotCookie, tt.want) {
+				t.Errorf("GetClaim()\nerror = %v\nwants = %v", gotCookie, tt.want)
+			}
+			gotHeader, err := GetClaim(tt.args.r_header, tt.args.from_header)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetClaim() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(gotHeader, tt.want) {
+				t.Errorf("GetClaim()\nerror = %v\nwants = %v", gotHeader, tt.want)
 			}
 		})
 	}

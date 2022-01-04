@@ -29,6 +29,36 @@ func TestConvertToNullTypeHookFunc(t *testing.T) {
 			want:    "123",
 			wantErr: false,
 		},
+		{
+			name: "ConvertToNullTypeHookFunc_int",
+			args: args{
+				f:    reflect.TypeOf(null.String{}),
+				t:    reflect.TypeOf(null.Int{}),
+				data: int(123),
+			},
+			want:    null.IntFrom(123),
+			wantErr: false,
+		},
+		{
+			name: "ConvertToNullTypeHookFunc_int64",
+			args: args{
+				f:    reflect.TypeOf(null.String{}),
+				t:    reflect.TypeOf(null.Int{}),
+				data: int64(123),
+			},
+			want:    null.IntFrom(123),
+			wantErr: false,
+		},
+		{
+			name: "ConvertToNullTypeHookFunc_float",
+			args: args{
+				f:    reflect.TypeOf(null.String{}),
+				t:    reflect.TypeOf(null.Float{}),
+				data: float64(123.45),
+			},
+			want:    null.FloatFrom(123.45),
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
