@@ -21,9 +21,7 @@ var (
 func main() {
 	uri := Address + ":" + Port
 
-	setupLogger()
-	setupKey()
-	setupRouter()
+	doSetup()
 
 	logging.Object.Log().Timestamp().Str("listen", Address+"\n").Send()
 	println("Listen", uri)

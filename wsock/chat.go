@@ -9,11 +9,10 @@ import (
 )
 
 var WSockWorkers map[uint64]WebSocketChatWorker = map[uint64]WebSocketChatWorker{}
-var Message chan string
+var Message chan MsgShape
 var Idx uint64 = 0
 
 func Publisher() {
-	Message = make(chan string, 10)
 	for {
 		select {
 		case msg := <-Message:
@@ -30,7 +29,7 @@ func Publisher() {
 func WebSocketChat(w http.ResponseWriter, r *http.Request) {
 	var err error
 	worker := WebSocketChatWorker{}
-	worker.msgCH = make(chan string, 10)
+	worker.msgCH = make(chan MsgShape)
 	worker.conn, _, _, err = ws.UpgradeHTTP(r, w)
 	if err != nil {
 		log.Println("ws UpgradeHTTP:", err)
@@ -40,9 +39,6 @@ func WebSocketChat(w http.ResponseWriter, r *http.Request) {
 	worker.Idx = idx
 	Idx++
 	WSockWorkers[idx] = worker
-
-	// Publisher or Broadcaster
-	go Publisher()
 
 	// Publish message to all workers
 	go func() {
@@ -56,7 +52,7 @@ func WebSocketChat(w http.ResponseWriter, r *http.Request) {
 				log.Println("ws ReadClientData:", err)
 				break
 			}
-			Message <- string(recv)
+			Message <- MsgShape{msg: string(recv)}
 		}
 	}()
 
@@ -66,11 +62,17 @@ func WebSocketChat(w http.ResponseWriter, r *http.Request) {
 			select {
 			case msg := <-worker.msgCH:
 				// log.Println("#", worker.Idx, "Received:", msg)
-				err = wsutil.WriteServerMessage(worker.conn, ws.OpText, []byte(msg))
+				err = wsutil.WriteServerMessage(worker.conn, ws.OpText, []byte(msg.msg))
 				if err != nil {
 					log.Println("ws WriteServerMessage:", err)
 				}
 			}
 		}
 	}()
+}
+
+func InitWebSocketChat() {
+	Message = make(chan MsgShape)
+	// Publisher or Broadcaster
+	go Publisher()
 }

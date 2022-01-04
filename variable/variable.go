@@ -1,3 +1,4 @@
+// +test skip
 package variable
 
 var (

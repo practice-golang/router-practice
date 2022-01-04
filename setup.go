@@ -5,6 +5,7 @@ import (
 	"router-practice/handler"
 	"router-practice/logging"
 	"router-practice/router"
+	"router-practice/wsock"
 	"time"
 
 	"github.com/rs/cors"
@@ -102,4 +103,11 @@ func setupRouter() {
 	// })
 	// serverHandler := c.Handler(r)
 
+}
+
+func doSetup() {
+	setupKey()
+	setupLogger()
+	setupRouter()
+	wsock.InitWebSocketChat()
 }
