@@ -1,5 +1,7 @@
 # Practice Route handler
 
+[![Go](https://github.com/practice-golang/router-practice/actions/workflows/go.yml/badge.svg)](https://github.com/practice-golang/router-practice/actions/workflows/go.yml)
+
 ## Practice what
 * own router, group-router
 * regular expression, testing
