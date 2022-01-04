@@ -366,7 +366,6 @@ func Test_HandleAsset(t *testing.T) {
 	css, _ := ioutil.ReadFile("../html/assets/css/bootstrap.min.css")
 	type args struct {
 		c    *router.Context
-		r    http.Request
 		want []byte
 	}
 	tests := []struct {
