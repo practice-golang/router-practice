@@ -9,13 +9,7 @@ all:
 	rm ./bin/gox*
 
 test:
-	go test ./...
-
-test-v:
-	go test -v ./...
-
-cover:
-	go test -cover ./...
+	go test ./... -race -cover
 
 clean:
 	rm -rf ./bin/*

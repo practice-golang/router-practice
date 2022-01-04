@@ -11,7 +11,7 @@ import (
 func SetupCookieToken(w http.ResponseWriter, authinfo model.AuthInfo) error {
 	token, err := GenerateToken(authinfo)
 	if err != nil {
-		log.Println(err)
+		log.Println("SetupCookieToken:", err)
 		return err
 	}
 

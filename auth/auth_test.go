@@ -10,7 +10,7 @@ import (
 	"gopkg.in/guregu/null.v4"
 )
 
-func TestSetupCookieToken(t *testing.T) {
+func Test_SetupCookieToken(t *testing.T) {
 	type args struct {
 		w        http.ResponseWriter
 		authinfo model.AuthInfo
@@ -23,7 +23,7 @@ func TestSetupCookieToken(t *testing.T) {
 		{
 			name: "SetupCookieToken",
 			args: args{
-				w: nil,
+				w: http.ResponseWriter(httptest.NewRecorder()),
 				authinfo: model.AuthInfo{
 					Name:     null.StringFrom("test_name"),
 					IpAddr:   null.StringFrom("192.168.1.1"),
@@ -31,19 +31,26 @@ func TestSetupCookieToken(t *testing.T) {
 					Duration: null.IntFrom(3600),
 				},
 			},
-			wantErr: true,
+			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := SetupCookieToken(tt.args.w, tt.args.authinfo); (err != nil) != tt.wantErr {
-				t.Errorf("SetupCookieToken() error = %v, wantErr %v", err, tt.wantErr)
+			err := GenerateKey()
+			if err != nil {
+				t.Errorf("GenerateKey() error = %v", err)
+				return
+			}
+
+			err = SetupCookieToken(tt.args.w, tt.args.authinfo)
+			if err != nil {
+				t.Errorf("SetupCookieToken() error = %v", err)
 			}
 		})
 	}
 }
 
-func TestGetClaim(t *testing.T) {
+func Test_GetClaim(t *testing.T) {
 	type args struct {
 		w           http.ResponseWriter
 		r_cookie    http.Request

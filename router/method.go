@@ -15,6 +15,7 @@ import (
 )
 
 var StaticServer Handler
+var EmbedStaticServer Handler
 
 func New() *App {
 	app := &App{
@@ -91,7 +92,7 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	for _, rt := range a.Routes {
 		matches := rt.Pattern.FindStringSubmatch(c.URL.Path)
 		if len(matches) > 0 {
-			// log.Println("Route path regex:", rt.Pattern.String(), c.URL.Path, matches)
+			// log.Println("Route path regex:", rt.Pattern.String(), c.URL.Path, matches, len(matches))
 			if !rt.Methods[c.Method] {
 				// a.MethodNotAllowed(c)
 				a.DefaultRoute(c)
@@ -153,12 +154,18 @@ func (c *Context) File(code int, body []byte) {
 	c.ResponseWriter.Write(body)
 }
 
+// SetupStaticServer - Serving internal `embedded` static files
 func SetupStaticServer() {
-	StaticContent, err := fs.Sub(fs.FS(Static), "static")
+	var err error
+
+	EmbedContent, err = fs.Sub(fs.FS(EmbedStatic), EmbedPath)
 	if err != nil {
 		logging.Object.Warn().Err(err).Msg("SetupStatic")
 	}
-	s := http.StripPrefix("/static/", http.FileServer(http.FS(StaticContent))) // embed storage
-	// s := http.StripPrefix("/static/", http.FileServer(http.Dir("../static"))) // real storage
+
+	e := http.StripPrefix("/embed/", http.FileServer(http.FS(EmbedContent))) // embed storage
+	EmbedStaticServer = func(c *Context) { e.ServeHTTP(c.ResponseWriter, c.Request) }
+
+	s := http.StripPrefix("/static/", http.FileServer(http.Dir(StaticPath))) // real storage
 	StaticServer = func(c *Context) { s.ServeHTTP(c.ResponseWriter, c.Request) }
 }

@@ -1,9 +1,15 @@
 package router
 
-import "embed"
+import (
+	"embed"
+	"io/fs"
+)
 
 var (
-	Content    embed.FS
-	Static     embed.FS
-	AllMethods = []string{"GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH"}
+	StaticPath      string = "../static"
+	EmbedPath string = "embed"
+	Content         embed.FS
+	EmbedStatic     embed.FS
+	EmbedContent    fs.FS
+	AllMethods      = []string{"GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH"}
 )

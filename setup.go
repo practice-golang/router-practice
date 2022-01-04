@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"router-practice/auth"
 	"router-practice/handler"
 	"router-practice/logging"
@@ -42,9 +43,10 @@ func setupLogger() {
 }
 
 func setupRouter() {
-
+	// router.StaticPath = "./static"
+	router.StaticPath = StaticPath
 	router.Content = Content
-	router.Static = Static
+	router.EmbedStatic = EmbedStatic
 
 	router.SetupStaticServer()
 
@@ -88,6 +90,7 @@ func setupRouter() {
 
 	/* Static */
 	r.Handle(`/static/*`, router.StaticServer, "GET")
+	r.Handle(`/embed/*`, router.EmbedStaticServer, "GET")
 
 	/* Websocket - /ws.html */
 	r.Handle(`/ws-echo`, handler.HandleWebsocketEcho, "GET")
@@ -106,8 +109,11 @@ func setupRouter() {
 }
 
 func doSetup() {
+	_ = os.Mkdir(StaticPath, os.ModePerm)
+
 	setupKey()
 	setupLogger()
 	setupRouter()
+
 	wsock.InitWebSocketChat()
 }

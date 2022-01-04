@@ -71,13 +71,13 @@ func GenerateToken(authinfo model.AuthInfo) (string, error) {
 		Build()
 
 	if err != nil {
-		log.Printf("failed to begin to build: %s\n", err)
+		log.Println("GenerateToken token", err)
 		return "", err
 	}
 
 	signed, err := jwt.Sign(token, Alg, RealKey)
 	if err != nil {
-		log.Printf("failed to generate signed payload: %s\n", err)
+		log.Println("GenerateToken sign", RealKey, "/", err)
 		return "", err
 	}
 

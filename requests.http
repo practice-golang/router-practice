@@ -55,6 +55,7 @@ GET {{uri}}/assets/css/bootstrap.min.css
 ### JS
 GET {{uri}}/assets/js/knockout-3.5.1.min.js
 
+## Static files
 ### text
 GET {{uri}}/static/hello.md
 
@@ -63,6 +64,22 @@ GET {{uri}}/static/gopher.png
 
 ### image #2
 GET {{uri}}/static/panic.png
+
+### not exists
+GET {{uri}}/static/notfound.txt
+
+## Embed files
+### text
+GET {{uri}}/embed/hello.md
+
+### image #1
+GET {{uri}}/embed/gopher.png
+
+### image #2
+GET {{uri}}/embed/panic.png
+
+### not exists
+GET {{uri}}/embed/notfound.txt
 
 
 

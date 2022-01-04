@@ -9,8 +9,10 @@ import (
 //go:embed html/*
 var Content embed.FS
 
-//go:embed static/*
-var Static embed.FS
+//go:embed embed/*
+var EmbedStatic embed.FS
+
+var StaticPath = "../static"
 
 var (
 	Port          string = "4416"
