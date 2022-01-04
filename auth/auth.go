@@ -40,7 +40,7 @@ func GetClaim(r http.Request, from string) (model.AuthInfo, error) {
 		dataHeader = r.Header.Get("Authorization")
 		dataHeaders := strings.Split(dataHeader, " ") // Bearer token
 		if dataHeaders[0] != "Bearer" {
-			log.Println("GetCookie cookie:", "Bearer not found")
+			// log.Println("GetCookie cookie:", "Bearer not found")
 			return result, errors.New("bearer not found")
 		}
 

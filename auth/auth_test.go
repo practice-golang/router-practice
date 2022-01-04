@@ -52,7 +52,6 @@ func Test_SetupCookieToken(t *testing.T) {
 
 func Test_GetClaim(t *testing.T) {
 	type args struct {
-		w           http.ResponseWriter
 		r_cookie    http.Request
 		r_header    http.Request
 		authinfo    model.AuthInfo
@@ -114,6 +113,13 @@ func Test_GetClaim(t *testing.T) {
 			if !reflect.DeepEqual(gotCookie, tt.want) {
 				t.Errorf("GetClaim()\nerror = %v\nwants = %v", gotCookie, tt.want)
 			}
+
+			tt.args.r_cookie.Header.Del("Cookie")
+			gotCookieErr, err := GetClaim(tt.args.r_cookie, tt.args.from_cookie)
+			if !reflect.DeepEqual(err.Error(), "http: named cookie not present") {
+				t.Errorf("GetClaim()\nerror = %v\nwants = %v", gotCookieErr, tt.want)
+			}
+
 			gotHeader, err := GetClaim(tt.args.r_header, tt.args.from_header)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetClaim() error = %v, wantErr %v", err, tt.wantErr)
@@ -121,6 +127,18 @@ func Test_GetClaim(t *testing.T) {
 			}
 			if !reflect.DeepEqual(gotHeader, tt.want) {
 				t.Errorf("GetClaim()\nerror = %v\nwants = %v", gotHeader, tt.want)
+			}
+
+			tt.args.r_header.Header.Set("Authorization", "Bearer "+token+"causeError")
+			gotHeaderErr1, _ := GetClaim(tt.args.r_header, tt.args.from_header)
+			if !reflect.DeepEqual(gotHeaderErr1, model.AuthInfo{}) {
+				t.Errorf("GetClaim()\nerror = %v\nwants = %v", gotHeaderErr1, tt.want)
+			}
+
+			tt.args.r_header.Header.Del("Authorization")
+			gotHeaderErr, err := GetClaim(tt.args.r_header, tt.args.from_header)
+			if !reflect.DeepEqual(err.Error(), "bearer not found") {
+				t.Errorf("GetClaim()\nerror = %v\nwants = %v", gotHeaderErr, tt.want)
 			}
 		})
 	}
