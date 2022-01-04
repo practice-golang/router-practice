@@ -8,7 +8,7 @@ GET {{uri}}/not-found
 GET {{uri}}
 
 ### index (=embed/HTML)
-GET {{uri}}/index2.html
+GET {{uri}}/index.html
 
 ### Hello world #1
 GET {{uri}}/hello

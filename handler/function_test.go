@@ -21,9 +21,7 @@ import (
 var fncEMBED embed.FS
 
 func Test_Index(t *testing.T) {
-	type args struct {
-		c *router.Context
-	}
+	type args struct{ c *router.Context }
 	tests := []struct {
 		name string
 		args args
@@ -99,9 +97,7 @@ func Test_Index(t *testing.T) {
 }
 
 func Test_HealthCheck(t *testing.T) {
-	type args struct {
-		c *router.Context
-	}
+	type args struct{ c *router.Context }
 	tests := []struct {
 		name string
 		args args

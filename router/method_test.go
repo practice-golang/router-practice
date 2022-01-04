@@ -14,9 +14,7 @@ import (
 var fncStatic embed.FS
 
 func Test_Router(t *testing.T) {
-	type args struct {
-		c *Context
-	}
+	type args struct{ c *Context }
 
 	tests := []struct {
 		name string

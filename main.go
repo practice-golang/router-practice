@@ -15,8 +15,8 @@ var EmbedStatic embed.FS
 var StaticPath = "../static"
 
 var (
-	Port          string = "4416"
 	Address       string = "localhost"
+	Port          string = "4416"
 	ServerHandler http.Handler
 )
 
