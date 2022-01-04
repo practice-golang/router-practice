@@ -34,19 +34,21 @@ func Test_main(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			Address = "localhost"
-			Port = "4416"
-			go main()
+			// Address = "localhost"
+			// Port = "4416"
+			// go main()
 
-			res, err := http.Get("http://" + Address + ":" + Port + "/hello")
-			if err != nil {
-				t.Fatal("http.Get", err)
-			}
-			defer res.Body.Close()
-
-			// ServerHandler.ServeHTTP(tt.args.c.ResponseWriter, tt.args.c.Request)
-			// res := tt.args.c.ResponseWriter.(*httptest.ResponseRecorder).Result()
+			// res, err := http.Get("http://" + Address + ":" + Port + "/hello")
+			// if err != nil {
+			// 	t.Fatal("http.Get", err)
+			// }
 			// defer res.Body.Close()
+
+			doSetup()
+
+			ServerHandler.ServeHTTP(tt.args.c.ResponseWriter, tt.args.c.Request)
+			res := tt.args.c.ResponseWriter.(*httptest.ResponseRecorder).Result()
+			defer res.Body.Close()
 
 			data, err := ioutil.ReadAll(res.Body)
 			if err != nil {
