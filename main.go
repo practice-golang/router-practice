@@ -3,6 +3,7 @@ package main // import "github.com/practice-golang/router-practice"
 import (
 	"embed"
 	"net/http"
+	"os"
 
 	"github.com/practice-golang/router-practice/logging"
 )
@@ -22,6 +23,14 @@ var (
 )
 
 func main() {
+	envPORT := os.Getenv("PORT")
+
+	if envPORT == "" {
+		envPORT = "4416"
+	}
+
+	Port = envPORT
+
 	uri := Address + ":" + Port
 
 	doSetup()
