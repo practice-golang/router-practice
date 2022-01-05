@@ -13,3 +13,5 @@ test:
 
 clean:
 	rm -rf ./bin/*
+	rm -f ./coverage.html
+	rm -f ./coverage.out
