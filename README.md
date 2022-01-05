@@ -6,7 +6,7 @@
 ## Practice what
 * own router, group-router
 * regular expression, testing
-* tooling usage: rs/cors, rs/zerolog, mitchellh/gox, gobwas/ws, github action, codecov
+* tooling usage: rs/cors, rs/zerolog, mitchellh/gox, gobwas/ws, github action, gocov, codecov
 
 ## Build
 * see `Makefile`
