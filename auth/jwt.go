@@ -6,9 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"router-practice/model"
-	"router-practice/variable"
 	"time"
+
+	"github.com/practice-golang/router-practice/model"
+	"github.com/practice-golang/router-practice/variable"
 
 	"github.com/lestrrat-go/jwx/jwa"
 	"github.com/lestrrat-go/jwx/jwk"

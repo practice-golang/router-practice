@@ -10,8 +10,9 @@ import (
 	"net/http"
 	"path"
 	"regexp"
-	"router-practice/logging"
 	"strings"
+
+	"github.com/practice-golang/router-practice/logging"
 )
 
 var StaticServer Handler

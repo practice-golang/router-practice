@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"router-practice/model"
+	"github.com/practice-golang/router-practice/model"
 
 	"github.com/brianvoe/sjwt"
 )

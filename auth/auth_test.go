@@ -4,8 +4,9 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"reflect"
-	"router-practice/model"
 	"testing"
+
+	"github.com/practice-golang/router-practice/model"
 
 	"gopkg.in/guregu/null.v4"
 )

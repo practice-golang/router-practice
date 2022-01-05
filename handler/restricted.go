@@ -2,9 +2,10 @@ package handler
 
 import (
 	"net/http"
-	"router-practice/auth"
-	"router-practice/model"
-	"router-practice/router"
+
+	"github.com/practice-golang/router-practice/auth"
+	"github.com/practice-golang/router-practice/model"
+	"github.com/practice-golang/router-practice/router"
 )
 
 func RestrictedHello(c *router.Context) {

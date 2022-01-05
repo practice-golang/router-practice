@@ -2,18 +2,19 @@ package main
 
 import (
 	"os"
-	"router-practice/auth"
-	"router-practice/handler"
-	"router-practice/logging"
-	"router-practice/router"
-	"router-practice/wsock"
 	"time"
+
+	"github.com/practice-golang/router-practice/auth"
+	"github.com/practice-golang/router-practice/handler"
+	"github.com/practice-golang/router-practice/logging"
+	"github.com/practice-golang/router-practice/router"
+	"github.com/practice-golang/router-practice/wsock"
 
 	"github.com/rs/cors"
 )
 
 func setupKey() {
-	auth.Secret = "practice-golang/router-practice secret"
+	auth.Secret = "practice-golang/github.com/practice-golang/router-practice secret"
 	err := auth.GenerateKey()
 
 	if err != nil {

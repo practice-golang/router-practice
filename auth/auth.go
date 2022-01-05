@@ -4,8 +4,9 @@ import (
 	"errors"
 	"log"
 	"net/http"
-	"router-practice/model"
 	"strings"
+
+	"github.com/practice-golang/router-practice/model"
 )
 
 func SetupCookieToken(w http.ResponseWriter, authinfo model.AuthInfo) error {

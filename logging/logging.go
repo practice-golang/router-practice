@@ -3,8 +3,9 @@ package logging
 import (
 	"io"
 	"os"
-	"router-practice/variable"
 	"time"
+
+	"github.com/practice-golang/router-practice/variable"
 
 	"github.com/rs/zerolog"
 )

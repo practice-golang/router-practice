@@ -2,8 +2,9 @@ package util
 
 import (
 	"embed"
-	"router-practice/router"
 	"testing"
+
+	"github.com/practice-golang/router-practice/router"
 )
 
 //go:embed embed_test/*

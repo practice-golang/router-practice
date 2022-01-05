@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"net/http"
 	"os"
-	"router-practice/logging"
-	"router-practice/model"
-	"router-practice/router"
-	"router-practice/util"
-	"router-practice/wsock"
+
+	"github.com/practice-golang/router-practice/logging"
+	"github.com/practice-golang/router-practice/model"
+	"github.com/practice-golang/router-practice/router"
+	"github.com/practice-golang/router-practice/util"
+	"github.com/practice-golang/router-practice/wsock"
 
 	"github.com/goccy/go-json"
 )

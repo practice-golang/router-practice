@@ -5,11 +5,12 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"router-practice/logging"
-	"router-practice/router"
-	"router-practice/variable"
 	"testing"
 	"time"
+
+	"github.com/practice-golang/router-practice/logging"
+	"github.com/practice-golang/router-practice/router"
+	"github.com/practice-golang/router-practice/variable"
 
 	"github.com/stretchr/testify/require"
 )

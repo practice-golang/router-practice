@@ -1,4 +1,4 @@
-module router-practice
+module github.com/practice-golang/router-practice
 
 go 1.17
 

@@ -6,8 +6,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"router-practice/router"
 	"testing"
+
+	"github.com/practice-golang/router-practice/router"
 
 	"github.com/stretchr/testify/require"
 )

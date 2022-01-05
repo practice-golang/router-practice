@@ -1,9 +1,10 @@
-package main // import "router-practice"
+package main // import "github.com/practice-golang/router-practice"
 
 import (
 	"embed"
 	"net/http"
-	"router-practice/logging"
+
+	"github.com/practice-golang/router-practice/logging"
 )
 
 //go:embed html/*

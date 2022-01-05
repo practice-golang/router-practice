@@ -4,9 +4,10 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"router-practice/model"
-	"router-practice/router"
 	"testing"
+
+	"github.com/practice-golang/router-practice/model"
+	"github.com/practice-golang/router-practice/router"
 
 	"github.com/stretchr/testify/require"
 	"gopkg.in/guregu/null.v4"

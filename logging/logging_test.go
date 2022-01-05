@@ -3,9 +3,10 @@ package logging
 import (
 	"io/ioutil"
 	"os"
-	"router-practice/variable"
 	"testing"
 	"time"
+
+	"github.com/practice-golang/router-practice/variable"
 
 	"github.com/stretchr/testify/require"
 )

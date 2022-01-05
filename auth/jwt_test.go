@@ -2,8 +2,9 @@ package auth
 
 import (
 	"reflect"
-	"router-practice/model"
 	"testing"
+
+	"github.com/practice-golang/router-practice/model"
 
 	"gopkg.in/guregu/null.v4"
 )
