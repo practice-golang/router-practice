@@ -5,7 +5,7 @@
 
 ## Practice what
 * own router, group-router
-* regular expression, testing
+* regexp, path/filepath, testing
 * tooling usage: rs/cors, rs/zerolog, mitchellh/gox, gobwas/ws, github action, gocov, codecov
 
 ## Build
