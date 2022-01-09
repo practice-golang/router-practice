@@ -1,10 +1,8 @@
 package fd
 
 import (
-	"fmt"
 	"io/fs"
 	"io/ioutil"
-	"path/filepath"
 	"sort"
 )
 
@@ -41,12 +39,6 @@ func sortByTime(a, b fs.FileInfo) bool {
 }
 
 func Dir(path string, sortby, direction int) ([]fs.FileInfo, error) {
-	absPath, err := filepath.Abs(filepath.Dir(path))
-	if err != nil {
-		return nil, err
-	}
-
-	fmt.Println("pwd:", absPath)
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, err
