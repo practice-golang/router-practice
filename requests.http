@@ -124,7 +124,7 @@ Authorization: Bearer eyJhbGciOiJSUzM4NCIsImtpZCI6InByYWN0aWNlLWdvbGFuZy9yb3V0ZX
 
 
 ### File and directory #1
-POST {{uri}}/api/fd/list
+POST {{uri}}/api/dir/list
 content-type: application/json
 Origin: {{uri}}
 
