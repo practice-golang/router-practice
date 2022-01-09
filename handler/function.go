@@ -4,12 +4,15 @@ import (
 	"bytes"
 	"net/http"
 	"os"
+	"path/filepath"
 
+	"github.com/practice-golang/router-practice/fd"
 	"github.com/practice-golang/router-practice/logging"
 	"github.com/practice-golang/router-practice/model"
 	"github.com/practice-golang/router-practice/router"
 	"github.com/practice-golang/router-practice/util"
 	"github.com/practice-golang/router-practice/wsock"
+	"gopkg.in/guregu/null.v4"
 
 	"github.com/goccy/go-json"
 )
@@ -136,4 +139,63 @@ func HandleWebsocketEcho(c *router.Context) {
 
 func HandleWebsocketChat(c *router.Context) {
 	wsock.WebSocketChat(c.ResponseWriter, c.Request)
+}
+
+func HandleGetDir(c *router.Context) {
+	path := model.FilePath{}
+	result := model.FileList{}
+
+	err := json.NewDecoder(c.Body).Decode(&path)
+	if err != nil {
+		c.Text(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	dir := filepath.Dir(path.Path.String)
+	absPath, err := filepath.Abs(dir)
+	if err != nil {
+		panic(err)
+	}
+
+	sort := 0
+	switch path.Sort.String {
+	case "name":
+		sort = fd.NAME
+	case "size":
+		sort = fd.SIZE
+	case "time":
+		sort = fd.TIME
+	default:
+		sort = fd.NAME
+	}
+
+	order := 0
+	switch path.Order.String {
+	case "asc":
+		order = fd.ASC
+	case "desc":
+		order = fd.DESC
+	default:
+		order = fd.ASC
+	}
+
+	result.Path = null.StringFrom(dir)
+	result.FullPath = null.StringFrom(absPath)
+
+	files, err := fd.Dir(absPath, sort, order)
+	if err != nil {
+		c.Text(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	for _, file := range files {
+		result.Files = append(result.Files, model.FileInfo{
+			Name:     null.StringFrom(file.Name()),
+			Size:     null.IntFrom(file.Size()),
+			DateTime: null.StringFrom(file.ModTime().Format("2006-01-02 15:04:05")),
+			IsDir:    null.BoolFrom(file.IsDir()),
+		})
+	}
+
+	c.Json(http.StatusOK, result)
 }

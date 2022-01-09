@@ -59,6 +59,9 @@ func setupRouter() {
 	g.Handle(`/hello$`, handler.Hello, "GET")
 	g.Handle(`/signin$`, handler.SigninAPI, "POST")
 
+	/* File & Directory */
+	g.Handle(`/fd/list`, handler.HandleGetDir, "POST")
+
 	/* Group */
 	gh := r.Group(`^/hello`)
 	gh.Handle(`$`, handler.Hello, "GET", "POST")
