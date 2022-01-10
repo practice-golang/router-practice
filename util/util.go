@@ -4,7 +4,7 @@ import (
 	"io/fs"
 	"os"
 
-	"github.com/practice-golang/router-practice/router"
+	"router-practice/router"
 )
 
 func CheckFileExists(path string, isEmbed bool) (result bool) {

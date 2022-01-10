@@ -6,12 +6,13 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/practice-golang/router-practice/fd"
-	"github.com/practice-golang/router-practice/logging"
-	"github.com/practice-golang/router-practice/model"
-	"github.com/practice-golang/router-practice/router"
-	"github.com/practice-golang/router-practice/util"
-	"github.com/practice-golang/router-practice/wsock"
+	"router-practice/fd"
+	"router-practice/logging"
+	"router-practice/model"
+	"router-practice/router"
+	"router-practice/util"
+	"router-practice/wsock"
+
 	"gopkg.in/guregu/null.v4"
 
 	"github.com/goccy/go-json"

@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/practice-golang/router-practice/logging"
-	"github.com/practice-golang/router-practice/router"
-	"github.com/practice-golang/router-practice/variable"
+	"router-practice/logging"
+	"router-practice/router"
+	"router-practice/variable"
 
 	"github.com/stretchr/testify/require"
 )

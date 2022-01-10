@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/practice-golang/router-practice/router"
+	"router-practice/router"
 
 	"github.com/goccy/go-json"
 	"github.com/stretchr/testify/require"

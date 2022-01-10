@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/practice-golang/router-practice/router"
+	"router-practice/router"
 
 	"github.com/stretchr/testify/require"
 )

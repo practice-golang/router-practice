@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/practice-golang/router-practice/variable"
+	"router-practice/variable"
 
 	"github.com/stretchr/testify/require"
 )

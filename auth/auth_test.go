@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/practice-golang/router-practice/model"
+	"router-practice/model"
 
 	"gopkg.in/guregu/null.v4"
 )

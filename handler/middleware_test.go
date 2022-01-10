@@ -6,9 +6,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/practice-golang/router-practice/auth"
-	"github.com/practice-golang/router-practice/model"
-	"github.com/practice-golang/router-practice/router"
+	"router-practice/auth"
+	"router-practice/model"
+	"router-practice/router"
 
 	"github.com/stretchr/testify/require"
 	"gopkg.in/guregu/null.v4"

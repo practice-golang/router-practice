@@ -12,7 +12,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/practice-golang/router-practice/logging"
+	"router-practice/logging"
 )
 
 var StaticServer Handler

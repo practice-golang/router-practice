@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/practice-golang/router-practice/auth"
-	"github.com/practice-golang/router-practice/router"
+	"router-practice/auth"
+	"router-practice/router"
 )
 
 func HelloMiddleware(c *router.Context) error {

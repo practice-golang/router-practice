@@ -4,7 +4,7 @@ import (
 	"embed"
 	"testing"
 
-	"github.com/practice-golang/router-practice/router"
+	"router-practice/router"
 )
 
 //go:embed embed_test/*
