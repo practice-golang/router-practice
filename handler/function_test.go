@@ -541,6 +541,12 @@ func TestHandleGetDir(t *testing.T) {
 			var got model.FileList
 			err = json.Unmarshal(data, &got)
 
+			for i, f := range got.Files {
+				if f.Name.String == "bin" || f.Name.String == "coverage.html" {
+					got.Files = append(got.Files[:i], got.Files[i+1:]...)
+				}
+			}
+
 			require.Equal(t, want.Path, got.Path, "GetDir not equal")
 			for i, v := range want.Files {
 				require.Equal(t, v.Name, got.Files[i].Name, "GetDir not equal")
