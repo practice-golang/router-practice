@@ -8,10 +8,10 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"router-practice/model"
+	"router-practice/router"
 	"strings"
 	"testing"
-
-	"router-practice/router"
 
 	"github.com/goccy/go-json"
 	"github.com/stretchr/testify/require"
@@ -487,4 +487,65 @@ func Test_WebsocketChat(t *testing.T) {
 
 		require.Equal(t, len(msg), i, "WebsocketChat not equal")
 	})
+}
+
+func TestHandleGetDir(t *testing.T) {
+	type args struct {
+		c        *router.Context
+		jsonBody map[string]interface{}
+	}
+	tests := []struct {
+		name string
+		args args
+		want []byte
+	}{
+		{
+			name: "Test_GetDir_name_asc",
+			args: args{
+				c: &router.Context{
+					Request:        httptest.NewRequest(http.MethodPost, "/api/dir/list", nil),
+					ResponseWriter: http.ResponseWriter(httptest.NewRecorder()),
+				},
+				jsonBody: map[string]interface{}{"path": "..", "sort": "name", "order": "asc"},
+			},
+			want: []byte(`{"path":"..","full-path":"C:\\Users\\high\\Desktop\\pcbangstudio\\workspace\\router-practice","files":[{"name":".git","size":0,"datetime":"2022-01-11 02:07:30","isdir":true},{"name":".github","size":0,"datetime":"2022-01-04 22:27:22","isdir":true},{"name":"auth","size":0,"datetime":"2022-01-10 19:44:26","isdir":true},{"name":"bin","size":0,"datetime":"2022-01-11 03:04:45","isdir":true},{"name":"embed","size":0,"datetime":"2022-01-04 22:27:22","isdir":true},{"name":"fd","size":0,"datetime":"2022-01-10 19:44:26","isdir":true},{"name":"handler","size":0,"datetime":"2022-01-10 19:44:26","isdir":true},{"name":"html","size":0,"datetime":"2022-01-04 22:27:22","isdir":true},{"name":"logging","size":0,"datetime":"2022-01-11 02:34:33","isdir":true},{"name":"model","size":0,"datetime":"2022-01-10 19:44:26","isdir":true},{"name":"router","size":0,"datetime":"2022-01-10 19:44:26","isdir":true},{"name":"static","size":0,"datetime":"2022-01-04 22:27:22","isdir":true},{"name":"util","size":0,"datetime":"2022-01-10 19:44:26","isdir":true},{"name":"variable","size":0,"datetime":"2022-01-04 22:27:22","isdir":true},{"name":"wsock","size":0,"datetime":"2022-01-04 22:27:22","isdir":true},{"name":".gitignore","size":47,"datetime":"2022-01-05 16:34:29","isdir":false},{"name":"Makefile","size":490,"datetime":"2022-01-10 19:44:26","isdir":false},{"name":"README.md","size":803,"datetime":"2022-01-10 19:44:26","isdir":false},{"name":"cover.cmd","size":493,"datetime":"2022-01-05 16:33:22","isdir":false},{"name":"coverage.html","size":134906,"datetime":"2022-01-11 02:34:31","isdir":false},{"name":"coverage.out","size":11305,"datetime":"2022-01-11 02:34:33","isdir":false},{"name":"go.mod","size":1210,"datetime":"2022-01-11 02:34:11","isdir":false},{"name":"go.sum","size":8075,"datetime":"2022-01-11 02:34:11","isdir":false},{"name":"main.go","size":756,"datetime":"2022-01-11 00:21:51","isdir":false},{"name":"main_test.go","size":1427,"datetime":"2022-01-10 19:44:26","isdir":false},{"name":"requests.http","size":3445,"datetime":"2022-01-11 03:05:02","isdir":false},{"name":"setup.go","size":3162,"datetime":"2022-01-10 19:44:26","isdir":false}]}`),
+		},
+		{
+			name: "Test_GetDir_name_desc",
+			args: args{
+				c: &router.Context{
+					Request:        httptest.NewRequest(http.MethodPost, "/api/dir/list", nil),
+					ResponseWriter: http.ResponseWriter(httptest.NewRecorder()),
+				},
+				jsonBody: map[string]interface{}{"path": "..", "sort": "name", "order": "desc"},
+			},
+			want: []byte(`{"path":"..","full-path":"C:\\Users\\high\\Desktop\\pcbangstudio\\workspace\\router-practice","files":[{"name":"setup.go","size":3162,"datetime":"2022-01-10 19:44:26","isdir":false},{"name":"requests.http","size":3445,"datetime":"2022-01-11 03:16:22","isdir":false},{"name":"main_test.go","size":1427,"datetime":"2022-01-10 19:44:26","isdir":false},{"name":"main.go","size":756,"datetime":"2022-01-11 00:21:51","isdir":false},{"name":"go.sum","size":8075,"datetime":"2022-01-11 02:34:11","isdir":false},{"name":"go.mod","size":1210,"datetime":"2022-01-11 02:34:11","isdir":false},{"name":"coverage.out","size":11305,"datetime":"2022-01-11 02:34:33","isdir":false},{"name":"coverage.html","size":134906,"datetime":"2022-01-11 02:34:31","isdir":false},{"name":"cover.cmd","size":493,"datetime":"2022-01-05 16:33:22","isdir":false},{"name":"README.md","size":803,"datetime":"2022-01-10 19:44:26","isdir":false},{"name":"Makefile","size":490,"datetime":"2022-01-10 19:44:26","isdir":false},{"name":".gitignore","size":47,"datetime":"2022-01-05 16:34:29","isdir":false},{"name":"wsock","size":0,"datetime":"2022-01-04 22:27:22","isdir":true},{"name":"variable","size":0,"datetime":"2022-01-04 22:27:22","isdir":true},{"name":"util","size":0,"datetime":"2022-01-10 19:44:26","isdir":true},{"name":"static","size":0,"datetime":"2022-01-04 22:27:22","isdir":true},{"name":"router","size":0,"datetime":"2022-01-10 19:44:26","isdir":true},{"name":"model","size":0,"datetime":"2022-01-10 19:44:26","isdir":true},{"name":"logging","size":0,"datetime":"2022-01-11 02:34:33","isdir":true},{"name":"html","size":0,"datetime":"2022-01-04 22:27:22","isdir":true},{"name":"handler","size":0,"datetime":"2022-01-10 19:44:26","isdir":true},{"name":"fd","size":0,"datetime":"2022-01-10 19:44:26","isdir":true},{"name":"embed","size":0,"datetime":"2022-01-04 22:27:22","isdir":true},{"name":"bin","size":0,"datetime":"2022-01-11 03:04:45","isdir":true},{"name":"auth","size":0,"datetime":"2022-01-10 19:44:26","isdir":true},{"name":".github","size":0,"datetime":"2022-01-04 22:27:22","isdir":true},{"name":".git","size":0,"datetime":"2022-01-11 02:07:30","isdir":true}]}`),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			body, _ := json.Marshal(tt.args.jsonBody)
+			tt.args.c.Request = httptest.NewRequest(http.MethodPost, "/api/dir/list", bytes.NewReader(body))
+			HandleGetDir(tt.args.c)
+
+			res := tt.args.c.ResponseWriter.(*httptest.ResponseRecorder).Result()
+			defer res.Body.Close()
+			data, err := ioutil.ReadAll(res.Body)
+			if err != nil {
+				t.Errorf("expected error to be nil got %v", err)
+			}
+
+			var want model.FileList
+			err = json.Unmarshal(tt.want, &want)
+
+			var got model.FileList
+			err = json.Unmarshal(data, &got)
+
+			require.Equal(t, want.Path, got.Path, "GetDir not equal")
+			require.Equal(t, want.FullPath, got.FullPath, "GetDir not equal")
+			for i, v := range want.Files {
+				require.Equal(t, v.Name, got.Files[i].Name, "GetDir not equal")
+			}
+		})
+	}
 }

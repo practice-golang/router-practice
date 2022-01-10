@@ -129,7 +129,7 @@ content-type: application/json
 Origin: {{uri}}
 
 {
-    "path": "../",
+    "path": "..",
     "sort": "name",
     "order": "asc"
 }

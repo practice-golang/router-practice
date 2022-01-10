@@ -152,10 +152,22 @@ func HandleGetDir(c *router.Context) {
 		return
 	}
 
-	dir := filepath.Dir(path.Path.String)
+	f, err := os.Stat(path.Path.String)
+	if err != nil {
+		c.Text(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	dir := path.Path.String
+	if f.IsDir() {
+		dir = path.Path.String + "/"
+	}
+
+	dir = filepath.Dir(dir)
 	absPath, err := filepath.Abs(dir)
 	if err != nil {
-		panic(err)
+		c.Text(http.StatusBadRequest, err.Error())
+		return
 	}
 
 	sort := 0
