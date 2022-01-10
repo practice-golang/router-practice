@@ -5,7 +5,7 @@ crossbuild:
 	go get -d github.com/mitchellh/gox
 	go build -mod=readonly -o ./bin/ github.com/mitchellh/gox
 	go mod tidy
-	./bin/gox -mod="readonly" -output="bin/{{.Dir}}_{{.OS}}_{{.Arch}}" -osarch="windows/amd64 linux/amd64 linux/arm darwin/amd64 darwin/arm64"
+	./bin/gox -mod="readonly" -ldflags="-w -s" -output="bin/{{.Dir}}_{{.OS}}_{{.Arch}}" -osarch="windows/amd64 linux/amd64 linux/arm darwin/amd64 darwin/arm64"
 	rm ./bin/gox*
 
 test:
