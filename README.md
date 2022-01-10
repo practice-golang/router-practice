@@ -1,6 +1,6 @@
 # Practice Route handler
 
-[![Go](https://router-practice/actions/workflows/go.yml/badge.svg)](https://router-practice/actions/workflows/go.yml)
+[![Go](https://github.com/practice-golang/router-practice/actions/workflows/go.yml/badge.svg)](https://github.com/practice-golang/router-practice/actions/workflows/go.yml)
 [![codecov](https://codecov.io/gh/practice-golang/router-practice/branch/main/graph/badge.svg?token=MQKFGED93S)](https://codecov.io/gh/practice-golang/router-practice)
 
 ## Practice what
