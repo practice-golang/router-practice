@@ -1,7 +1,7 @@
 build:
 	go build -ldflags "-w -s" -trimpath -o bin/
 
-cross:
+dist:
 	go get -d github.com/mitchellh/gox
 	go build -mod=readonly -o ./bin/ github.com/mitchellh/gox
 	go mod tidy
