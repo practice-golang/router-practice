@@ -36,9 +36,12 @@ func Test_HelloMiddleware(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			HelloMiddleware(tt.args.c)
+			h := router.New(HelloMiddleware)
+			h.Handle("/api", func(c *router.Context) {}, "GET")
+			h.ServeHTTP(tt.args.c.ResponseWriter, tt.args.c.Request)
 
 			res := tt.args.c.ResponseWriter.(*httptest.ResponseRecorder).Result()
+
 			defer res.Body.Close()
 			data, err := ioutil.ReadAll(res.Body)
 			if err != nil {
@@ -151,7 +154,9 @@ func Test_AuthMiddleware(t *testing.T) {
 				})
 			}
 
-			tt.args.run_func(tt.args.c)
+			h := router.New(tt.args.run_func)
+			h.Handle("/api", func(c *router.Context) {}, "GET")
+			h.ServeHTTP(tt.args.c.ResponseWriter, tt.args.c.Request)
 
 			res := tt.args.c.ResponseWriter.(*httptest.ResponseRecorder).Result()
 			defer res.Body.Close()
