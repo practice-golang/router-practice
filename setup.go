@@ -51,7 +51,12 @@ func setupRouter() {
 
 	router.SetupStaticServer()
 
-	r := router.New()
+	middlewares := []router.Middleware{
+		handler.HelloGlobalMiddleware1,
+		handler.HelloGlobalMiddleware2,
+	}
+
+	r := router.New(middlewares...)
 
 	/* API */
 	g := r.Group(`^/api`)

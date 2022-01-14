@@ -18,7 +18,7 @@ import (
 var StaticServer Handler
 var EmbedStaticServer Handler
 
-func New() *App {
+func New(middleware ...Middleware) *App {
 	app := &App{
 		DefaultRoute: func(c *Context) {
 			c.Text(http.StatusNotFound, "Not found")
@@ -26,6 +26,7 @@ func New() *App {
 		MethodNotAllowed: func(c *Context) {
 			c.Text(http.StatusNotFound, "Method not allowed")
 		},
+		Middlewares: middleware,
 	}
 
 	return app
@@ -42,9 +43,10 @@ func (a *App) Group(prefix string, middleware ...Middleware) *RouteGroup {
 }
 
 func (g *RouteGroup) Handle(pattern string, handler Handler, methods ...string) {
+	appMiddlewares := g.App.Middlewares
 	g.App.Middlewares = append(g.App.Middlewares, g.Middlewares...)
 	g.App.Handle(g.Prefix+pattern, handler, methods...)
-	g.App.Middlewares = nil
+	g.App.Middlewares = appMiddlewares
 }
 
 func (a *App) Handle(pattern string, handler Handler, methods ...string) {

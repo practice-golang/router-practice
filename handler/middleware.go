@@ -9,6 +9,20 @@ import (
 	"router-practice/router"
 )
 
+func HelloGlobalMiddleware1(c *router.Context) error {
+	// c.Text(http.StatusInternalServerError, "Hello 1<br />\n")
+	log.Println("HelloGlobalMiddleware1")
+
+	return nil
+}
+
+func HelloGlobalMiddleware2(c *router.Context) error {
+	// c.Text(http.StatusInternalServerError, "Hello 2<br />\n")
+	log.Println("HelloGlobalMiddleware2")
+
+	return nil
+}
+
 func HelloMiddleware(c *router.Context) error {
 	c.Text(http.StatusInternalServerError, "Middle ware test error")
 
