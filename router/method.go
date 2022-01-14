@@ -107,11 +107,7 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 
 			for _, m := range rt.Middlewares {
-				err := m(c)
-				if err != nil {
-					// log.Println("Middleware error:", err)
-					return
-				}
+				rt.Handler = m(rt.Handler)
 			}
 
 			rt.Handler(c)

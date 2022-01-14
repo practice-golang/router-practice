@@ -9,54 +9,67 @@ import (
 	"router-practice/router"
 )
 
-func HelloGlobalMiddleware1(c *router.Context) error {
-	// c.Text(http.StatusInternalServerError, "Hello 1<br />\n")
-	log.Println("HelloGlobalMiddleware1")
+func HelloGlobalMiddleware1(next router.Handler) router.Handler {
+	return func(c *router.Context) {
+		log.Println("HelloGlobalMiddleware1")
 
-	return nil
-}
+		c.Params = append(c.Params, "middleware global1")
+		c.Text(http.StatusOK, "middleware global1")
 
-func HelloGlobalMiddleware2(c *router.Context) error {
-	// c.Text(http.StatusInternalServerError, "Hello 2<br />\n")
-	log.Println("HelloGlobalMiddleware2")
-
-	return nil
-}
-
-func HelloMiddleware(c *router.Context) error {
-	c.Text(http.StatusInternalServerError, "Middle ware test error")
-
-	return errors.New("hello middleware error")
-}
-
-func AuthMiddleware(c *router.Context) error {
-	claim, err := auth.GetClaim(*c.Request, "cookie")
-	if err != nil {
-		auth.ExpireCookie(c.ResponseWriter)
-
-		// log.Println("AuthMiddleware:", err)
-		c.Text(http.StatusUnauthorized, "Auth error")
-
-		return err
+		next(c)
 	}
-
-	c.AuthInfo = claim
-	// c.Params = append(c.Params, claim.Name.String)
-
-	return nil
 }
 
-func AuthApiMiddleware(c *router.Context) error {
-	c.Request.Header.Get("Authorization")
-	claim, err := auth.GetClaim(*c.Request, "header")
-	if err != nil {
-		log.Println("AuthApiMiddleware:", err)
-		c.Text(http.StatusUnauthorized, "Auth error")
+func HelloGlobalMiddleware2(next router.Handler) router.Handler {
+	return func(c *router.Context) {
+		log.Println("HelloGlobalMiddleware2")
 
-		return err
+		c.Params = append(c.Params, "middleware global2")
+		c.Text(http.StatusOK, "middleware global2")
+
+		next(c)
 	}
+}
 
-	c.AuthInfo = claim
+func HelloMiddleware(next router.Handler) router.Handler {
+	return func(c *router.Context) {
+		c.Text(http.StatusInternalServerError, "Middle ware test error")
+		log.Println(errors.New("hello middleware error"))
+		return
+	}
+}
 
-	return nil
+func AuthMiddleware(next router.Handler) router.Handler {
+	return func(c *router.Context) {
+		claim, err := auth.GetClaim(*c.Request, "cookie")
+		if err != nil {
+			auth.ExpireCookie(c.ResponseWriter)
+
+			c.Text(http.StatusUnauthorized, "Auth error")
+
+			return
+		}
+
+		c.AuthInfo = claim
+		// c.Params = append(c.Params, claim.Name.String)
+
+		next(c)
+	}
+}
+
+func AuthApiMiddleware(next router.Handler) router.Handler {
+	return func(c *router.Context) {
+		c.Request.Header.Get("Authorization")
+		claim, err := auth.GetClaim(*c.Request, "header")
+		if err != nil {
+			log.Println("AuthApiMiddleware:", err)
+			c.Text(http.StatusUnauthorized, "Auth error")
+
+			return
+		}
+
+		c.AuthInfo = claim
+
+		next(c)
+	}
 }

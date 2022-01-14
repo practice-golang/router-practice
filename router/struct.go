@@ -5,8 +5,9 @@ import (
 	"regexp"
 )
 
+// type Middleware func(*Context) error
 type Handler func(*Context)
-type Middleware func(*Context) error
+type Middleware func(Handler) Handler
 
 type Methods map[string]bool
 
