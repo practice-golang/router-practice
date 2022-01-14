@@ -2,6 +2,7 @@ package main // import "router-practice"
 
 import (
 	"embed"
+	"log"
 	"net/http"
 	"os"
 
@@ -40,6 +41,7 @@ func main() {
 
 	err := http.ListenAndServe(uri, ServerHandler)
 	if err != nil {
+		log.Println("ListenAndServe:", err)
 		logging.Object.Warn().Err(err).Timestamp().Msg("Server start failed")
 	}
 }
