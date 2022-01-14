@@ -12,7 +12,7 @@
 * see [Makefile](/Makefile)
 
 ## Route
-* see [requests.http](/request.http), [setup.go](/setup.go)
+* see [requests.http](/requests.http), [setup.go](/setup.go)
 
 ## Coverage checking
 * see [Makefile](/Makefile), [cover.cmd](/cover.cmd)
