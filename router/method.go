@@ -49,6 +49,17 @@ func (g *RouteGroup) Handle(pattern string, handler Handler, methods ...string) 
 	g.App.Middlewares = appMiddlewares
 }
 
+// Aliases - Bypass to Handle of Group
+func (g *RouteGroup) GET(pattern string, handler Handler)     { g.Handle(pattern, handler, "GET") }
+func (g *RouteGroup) HEAD(pattern string, handler Handler)    { g.Handle(pattern, handler, "HEAD") }
+func (g *RouteGroup) POST(pattern string, handler Handler)    { g.Handle(pattern, handler, "POST") }
+func (g *RouteGroup) PUT(pattern string, handler Handler)     { g.Handle(pattern, handler, "PUT") }
+func (g *RouteGroup) DELETE(pattern string, handler Handler)  { g.Handle(pattern, handler, "DELETE") }
+func (g *RouteGroup) CONNECT(pattern string, handler Handler) { g.Handle(pattern, handler, "CONNECT") }
+func (g *RouteGroup) OPTIONS(pattern string, handler Handler) { g.Handle(pattern, handler, "OPTIONS") }
+func (g *RouteGroup) TRACE(pattern string, handler Handler)   { g.Handle(pattern, handler, "TRACE") }
+func (g *RouteGroup) PATCH(pattern string, handler Handler)   { g.Handle(pattern, handler, "PATCH") }
+
 func (a *App) Handle(pattern string, handler Handler, methods ...string) {
 	re := regexp.MustCompile(pattern)
 	m := Methods{}
@@ -68,6 +79,17 @@ func (a *App) Handle(pattern string, handler Handler, methods ...string) {
 
 	a.Routes = append(a.Routes, route)
 }
+
+// Aliases - Bypass to Handle of App
+func (a *App) GET(pattern string, handler Handler)     { a.Handle(pattern, handler, "GET") }
+func (a *App) HEAD(pattern string, handler Handler)    { a.Handle(pattern, handler, "HEAD") }
+func (a *App) POST(pattern string, handler Handler)    { a.Handle(pattern, handler, "POST") }
+func (a *App) PUT(pattern string, handler Handler)     { a.Handle(pattern, handler, "PUT") }
+func (a *App) DELETE(pattern string, handler Handler)  { a.Handle(pattern, handler, "DELETE") }
+func (a *App) CONNECT(pattern string, handler Handler) { a.Handle(pattern, handler, "CONNECT") }
+func (a *App) OPTIONS(pattern string, handler Handler) { a.Handle(pattern, handler, "OPTIONS") }
+func (a *App) TRACE(pattern string, handler Handler)   { a.Handle(pattern, handler, "TRACE") }
+func (a *App) PATCH(pattern string, handler Handler)   { a.Handle(pattern, handler, "PATCH") }
 
 func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	c := &Context{Request: r, ResponseWriter: w}
