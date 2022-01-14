@@ -51,7 +51,6 @@ func AuthMiddleware(next router.Handler) router.Handler {
 		}
 
 		c.AuthInfo = claim
-		// c.Params = append(c.Params, claim.Name.String)
 
 		next(c)
 	}

@@ -69,7 +69,6 @@ func Test_Index(t *testing.T) {
 				StoreRoot = "./not-found"
 				EmbedRoot = "embed_test"
 				router.Content = fncEMBED
-				// tt.args.c.URL.Path = "/index.html"
 				want = []byte("Hello embedded world")
 			}
 			if tt.name == "Test_Index_notfound" {
@@ -77,7 +76,7 @@ func Test_Index(t *testing.T) {
 				EmbedRoot = "not-found"
 				want = []byte("Not found")
 			}
-			// HandleHTML(tt.args.c)
+
 			Index(tt.args.c)
 
 			StoreRoot = storeRootBackup

@@ -44,7 +44,6 @@ func setupLogger() {
 }
 
 func setupRouter() {
-	// router.StaticPath = "./static"
 	router.StaticPath = StaticPath
 	router.Content = Content
 	router.EmbedStatic = EmbedStatic

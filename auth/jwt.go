@@ -22,7 +22,7 @@ var Alg jwa.SignatureAlgorithm = jwa.RS384
 var KeySET jwk.Set
 var RealKey jwk.Key
 
-// GenerateKey - 키 생성
+// GenerateKey - Generate key
 func GenerateKey() error {
 	// log.Println("alg/key:", Alg, Secret)
 
@@ -61,7 +61,7 @@ func GenerateKey() error {
 	return nil
 }
 
-// GenerateToken - 토큰 생성
+// GenerateToken - Generate token
 func GenerateToken(authinfo model.AuthInfo) (string, error) {
 	token, err := jwt.NewBuilder().
 		Issuer(variable.ProgramName).
@@ -87,7 +87,7 @@ func GenerateToken(authinfo model.AuthInfo) (string, error) {
 	return result, err
 }
 
-// ParseToken - 토큰 파싱
+// ParseToken - Parse token
 func ParseToken(payloadSTR string) (jwt.Token, model.AuthInfo, error) {
 	payload := []byte(payloadSTR)
 

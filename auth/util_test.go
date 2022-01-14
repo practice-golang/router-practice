@@ -68,7 +68,6 @@ func TestConvertToNullTypeHookFunc(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				// t.Errorf("ConvertToNullTypeHookFunc() = %v, want %v", reflect.TypeOf(got), reflect.TypeOf(tt.want))
 				t.Errorf("ConvertToNullTypeHookFunc() = %v, want %v", got, tt.want)
 			}
 		})

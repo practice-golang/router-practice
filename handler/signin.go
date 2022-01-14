@@ -20,9 +20,6 @@ func Signin(c *router.Context) {
 		c.Json(http.StatusBadRequest, err.Error())
 	}
 
-	// log.Println(c.Request.RemoteAddr)
-	// log.Println(c.Request.UserAgent())
-
 	signin := model.SignIn{}
 	err = json.Unmarshal(b, &signin)
 	if err != nil {
@@ -49,9 +46,6 @@ func SigninAPI(c *router.Context) {
 	if err != nil {
 		c.Json(http.StatusBadRequest, err.Error())
 	}
-
-	// log.Println(c.Request.RemoteAddr)
-	// log.Println(c.Request.UserAgent())
 
 	signin := model.SignIn{}
 	err = json.Unmarshal(b, &signin)

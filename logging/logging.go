@@ -21,9 +21,7 @@ func SetupLogger() {
 
 	fname := variable.ProgramName + "-" + time.Now().Format("20060102") + ".log"
 	F, _ = os.OpenFile(fname, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
-	// w := io.MultiWriter(os.Stdout, F)
 	w := io.MultiWriter(F)
-	// w := io.Writer(F)
 
 	Object = zerolog.New(w).With().Logger()
 }
