@@ -9,10 +9,10 @@
 * tooling usage: rs/cors, rs/zerolog, mitchellh/gox, gobwas/ws, github action, gocov, codecov
 
 ## Build
-* see `Makefile`
+* see [Makefile](/blob/main/Makefile)
 
 ## Route
-* see `requests.http`
+* see `requests.http`, `setup.go`
 
 ## Coverage checking
 * see `Makefile`, `cover.cmd`
