@@ -17,7 +17,6 @@ type CustomHandler struct {
 var Content embed.FS
 
 func HelloWorld(c *router.Context) {
-	// log.Println("WTF???")
 	c.Text(http.StatusOK, fmt.Sprintf("Hello %s", c.Params[0]))
 }
 
