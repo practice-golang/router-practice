@@ -8,6 +8,7 @@ import (
 	"router-practice/handler"
 	"router-practice/logging"
 	"router-practice/router"
+	"router-practice/util"
 	"router-practice/wsock"
 
 	"github.com/rs/cors"
@@ -15,8 +16,17 @@ import (
 
 func setupKey() {
 	auth.Secret = "practice-golang/router-practice secret"
-	err := auth.GenerateKey()
 
+	privKeyExist := util.CheckFileExists(auth.JwtPrivateKeyFileName, false)
+	pubKeyExist := util.CheckFileExists(auth.JwtPublicKeyFileName, false)
+	if privKeyExist && pubKeyExist {
+		auth.LoadKeys()
+	} else {
+		auth.GenerateKeys()
+		auth.SaveKeys()
+	}
+
+	err := auth.GenerateKeySet()
 	if err != nil {
 		panic(err)
 	}

@@ -3,8 +3,10 @@ package auth
 import (
 	"crypto/rand"
 	"crypto/rsa"
+	"crypto/x509"
+	"encoding/pem"
 	"errors"
-	"fmt"
+	"io/ioutil"
 	"log"
 	"time"
 
@@ -19,37 +21,113 @@ import (
 
 var Secret string = "secret"
 var Alg jwa.SignatureAlgorithm = jwa.RS384
+var PrivKey *rsa.PrivateKey
+var PubKey jwk.Key
 var KeySET jwk.Set
 var RealKey jwk.Key
 
-// GenerateKey - Generate key
-func GenerateKey() error {
-	// log.Println("alg/key:", Alg, Secret)
+func GenerateKeys() error {
+	var err error
 
-	privKey, err := rsa.GenerateKey(rand.Reader, 2048)
+	PrivKey, err = rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
-		log.Printf("failed to generate private key: %s\n", err)
+		log.Println(err)
 		return err
 	}
 
-	pubKey, err := jwk.New(privKey.PublicKey)
+	PubKey, err = jwk.New(PrivKey.PublicKey)
 	if err != nil {
-		fmt.Printf("failed to create JWK: %s\n", err)
+		log.Println(err)
 		return err
 	}
 
-	pubKey.Set(jwk.AlgorithmKey, Alg)
-	pubKey.Set(jwk.KeyIDKey, Secret)
+	return nil
+}
+
+func SaveKeys() error {
+	var err error
+
+	privASN := x509.MarshalPKCS1PrivateKey(PrivKey)
+
+	privBytes := pem.EncodeToMemory(&pem.Block{
+		Type:  "RSA PRIVATE KEY",
+		Bytes: privASN,
+	})
+
+	err = ioutil.WriteFile(JwtPrivateKeyFileName, privBytes, 0644)
+	if err != nil {
+		return err
+	}
+
+	pubASN, err := x509.MarshalPKIXPublicKey(&PrivKey.PublicKey)
+	if err != nil {
+		return err
+	}
+
+	pubBytes := pem.EncodeToMemory(&pem.Block{
+		Type:  "RSA PUBLIC KEY",
+		Bytes: pubASN,
+	})
+
+	err = ioutil.WriteFile(JwtPublicKeyFileName, pubBytes, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func LoadKeys() error {
+	var err error
+
+	privBytes, err := ioutil.ReadFile(JwtPrivateKeyFileName)
+	if err != nil {
+		return err
+	}
+
+	privASN, _ := pem.Decode(privBytes)
+
+	PrivKey, err = x509.ParsePKCS1PrivateKey(privASN.Bytes)
+	if err != nil {
+		return err
+	}
+
+	pubBytes, err := ioutil.ReadFile(JwtPublicKeyFileName)
+	if err != nil {
+		return err
+	}
+
+	pubASN, _ := pem.Decode(pubBytes)
+
+	publicKey, err := x509.ParsePKIXPublicKey(pubASN.Bytes)
+	if err != nil {
+		return err
+	}
+
+	PubKey, err = jwk.New(publicKey)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// GenerateKeySet - Generate key set
+func GenerateKeySet() error {
+	var err error
+
+	PubKey.Set(jwk.AlgorithmKey, Alg)
+	PubKey.Set(jwk.KeyIDKey, Secret)
 
 	bogusKey := jwk.NewSymmetricKey()
 	bogusKey.Set(jwk.AlgorithmKey, jwa.NoSignature)
 	bogusKey.Set(jwk.KeyIDKey, "otherkey")
 
 	KeySET = jwk.NewSet()
-	KeySET.Add(pubKey)
+	KeySET.Add(PubKey)
 	KeySET.Add(bogusKey)
 
-	RealKey, err = jwk.New(privKey)
+	RealKey, err = jwk.New(PrivKey)
 	if err != nil {
 		log.Printf("failed to create JWK: %s\n", err)
 		return err

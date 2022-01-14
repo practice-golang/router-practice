@@ -37,9 +37,14 @@ func Test_SetupCookieToken(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := GenerateKey()
+			err := GenerateKeys()
 			if err != nil {
-				t.Errorf("GenerateKey() error = %v", err)
+				t.Errorf("GenerateKeys() error = %v", err)
+				return
+			}
+			err = GenerateKeySet()
+			if err != nil {
+				t.Errorf("GenerateKeySet() error = %v", err)
 				return
 			}
 
@@ -89,7 +94,12 @@ func Test_GetClaim(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := GenerateKey()
+			err := GenerateKeys()
+			if err != nil {
+				t.Errorf("GenerateKeys() error = %v", err)
+				return
+			}
+			err = GenerateKeySet()
 			if err != nil {
 				t.Errorf("GenerateKey() error = %v", err)
 				return

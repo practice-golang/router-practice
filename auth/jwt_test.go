@@ -18,7 +18,13 @@ func Test_GenerateAndParseToken(t *testing.T) {
 	}
 
 	t.Run("GenerateToken", func(t *testing.T) {
-		err := GenerateKey()
+		err := GenerateKeys()
+		if err != nil {
+			t.Errorf("GenerateKey() error = %v", err)
+			return
+		}
+
+		err = GenerateKeySet()
 		if err != nil {
 			t.Errorf("GenerateKey() error = %v", err)
 			return

@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"router-practice/auth"
 	"router-practice/logging"
 	"router-practice/router"
 	"router-practice/variable"
@@ -58,6 +59,9 @@ func Test_main(t *testing.T) {
 			fname := variable.ProgramName + "-" + time.Now().Format("20060102") + ".log"
 			logging.F.Close()
 			os.Remove(fname)
+
+			os.Remove(auth.JwtPrivateKeyFileName)
+			os.Remove(auth.JwtPublicKeyFileName)
 
 			require.Equal(t, tt.want, data, "not equal")
 		})

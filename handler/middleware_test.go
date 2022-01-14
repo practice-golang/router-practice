@@ -124,7 +124,12 @@ func Test_AuthMiddleware(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.name == "Test_AuthApiMiddleware" {
-				err := auth.GenerateKey()
+				err := auth.GenerateKeys()
+				if err != nil {
+					t.Errorf("GenerateKeys() error = %v", err)
+					return
+				}
+				err = auth.GenerateKeySet()
 				if err != nil {
 					t.Errorf("GenerateKey() error = %v", err)
 					return
@@ -137,7 +142,7 @@ func Test_AuthMiddleware(t *testing.T) {
 
 				tt.args.c.Request.Header.Add("Authorization", "Bearer "+token)
 			} else if tt.name == "Test_AuthMiddleware" {
-				err := auth.GenerateKey()
+				err := auth.GenerateKeySet()
 				if err != nil {
 					t.Errorf("GenerateKey() error = %v", err)
 					return
