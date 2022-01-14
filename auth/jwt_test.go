@@ -18,7 +18,7 @@ func Test_GenerateAndParseToken(t *testing.T) {
 	}
 
 	t.Run("GenerateToken", func(t *testing.T) {
-		err := GenerateKeys()
+		err := GenerateRsaKeys()
 		if err != nil {
 			t.Errorf("GenerateKey() error = %v", err)
 			return

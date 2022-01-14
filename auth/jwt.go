@@ -26,7 +26,7 @@ var PubKey jwk.Key
 var KeySET jwk.Set
 var RealKey jwk.Key
 
-func GenerateKeys() error {
+func GenerateRsaKeys() error {
 	var err error
 
 	PrivKey, err = rsa.GenerateKey(rand.Reader, 2048)
@@ -44,7 +44,7 @@ func GenerateKeys() error {
 	return nil
 }
 
-func SaveKeys() error {
+func SaveRsaKeys() error {
 	var err error
 
 	privASN := x509.MarshalPKCS1PrivateKey(PrivKey)
@@ -77,7 +77,7 @@ func SaveKeys() error {
 	return nil
 }
 
-func LoadKeys() error {
+func LoadRsaKeys() error {
 	var err error
 
 	privBytes, err := ioutil.ReadFile(JwtPrivateKeyFileName)

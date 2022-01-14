@@ -124,7 +124,7 @@ func Test_AuthMiddleware(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.name == "Test_AuthApiMiddleware" {
-				err := auth.GenerateKeys()
+				err := auth.GenerateRsaKeys()
 				if err != nil {
 					t.Errorf("GenerateKeys() error = %v", err)
 					return

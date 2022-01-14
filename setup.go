@@ -20,10 +20,10 @@ func setupKey() {
 	privKeyExist := util.CheckFileExists(auth.JwtPrivateKeyFileName, false)
 	pubKeyExist := util.CheckFileExists(auth.JwtPublicKeyFileName, false)
 	if privKeyExist && pubKeyExist {
-		auth.LoadKeys()
+		auth.LoadRsaKeys()
 	} else {
-		auth.GenerateKeys()
-		auth.SaveKeys()
+		auth.GenerateRsaKeys()
+		auth.SaveRsaKeys()
 	}
 
 	err := auth.GenerateKeySet()
