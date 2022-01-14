@@ -65,26 +65,26 @@ func setupRouter() {
 	g.Handle(`/signin$`, handler.SigninAPI, "POST")
 
 	/* File & Directory */
-	g.Handle(`/dir/list$`, handler.HandleGetDir, "POST")
+	g.POST(`/dir/list$`, handler.HandleGetDir)
 
 	/* Group */
 	gh := r.Group(`^/hello`)
 	gh.Handle(`$`, handler.Hello, "GET", "POST")
-	gh.Handle(`/([\p{L}\d_]+)$`, handler.HelloParam, "GET")
+	gh.GET(`/([\p{L}\d_]+)$`, handler.HelloParam)
 
 	/* Middleware */
 	gm := r.Group(``, handler.HelloMiddleware)
-	gm.Handle(`/hi/([\p{L}\d_]+)$`, handler.HelloParam, "GET")
+	gm.GET(`/hi/([\p{L}\d_]+)$`, handler.HelloParam)
 
 	/* Restricted - Cookie */
 	r.Handle(`^/signin$`, handler.Signin, "POST")
 	gr := r.Group(``, handler.AuthMiddleware)
-	gr.Handle(`^/restricted$`, handler.RestrictedHello, "GET")
-	gr.Handle(`^/signout$`, handler.SignOut, "GET")
+	gr.GET(`^/restricted$`, handler.RestrictedHello)
+	gr.GET(`^/signout$`, handler.SignOut)
 
 	/* Restricted - Header */
 	ga := r.Group(`^/api`, handler.AuthApiMiddleware)
-	ga.Handle(`/restricted$`, handler.RestrictedHello, "GET")
+	ga.GET(`/restricted$`, handler.RestrictedHello)
 
 	/* HTML */
 	r.Handle(`^/?$`, handler.Index, "GET")
