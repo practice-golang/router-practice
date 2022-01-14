@@ -2,46 +2,69 @@ package main // import "router-practice"
 
 import (
 	"embed"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
-
-	"router-practice/logging"
+	"router-practice/router"
 )
+
+type CustomHandler struct {
+	http.Handler
+}
 
 //go:embed html/*
 var Content embed.FS
 
-//go:embed embed/*
-var EmbedStatic embed.FS
+func HelloWorld(c *router.Context) {
+	// log.Println("WTF???")
+	c.Text(http.StatusOK, fmt.Sprintf("Hello %s", c.Params[0]))
+}
 
-var StaticPath = "../static"
-
-var (
-	Address       string = "localhost"
-	Port          string = "4416"
-	ServerHandler http.Handler
-)
+func HelloMux(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello World")
+}
 
 func main() {
-	envPORT := os.Getenv("PORT")
+	uri := "127.0.0.1:4416"
 
-	if envPORT == "" {
-		envPORT = "4416"
+	handler := CustomHandler{
+		Handler: http.HandlerFunc(HelloMux),
 	}
 
-	Port = envPORT
+	b := http.NewServeMux()
 
-	uri := Address + ":" + Port
+	b.Handle("/", handler)
 
-	doSetup()
+	a := router.NewApp()
 
-	logging.Object.Log().Timestamp().Str("listen", Address+"\n").Send()
-	println("Listen", uri)
+	a.Handle(`^/hello$`, func(ctx *router.Context) {
+		ctx.Text(http.StatusOK, "Hello world")
+	})
 
-	err := http.ListenAndServe(uri, ServerHandler)
+	a.Handle(`/hello/([\w\._-]+)$`, HelloWorld)
+
+	a.Handle(`/*.html`, func(ctx *router.Context) {
+		var h []byte
+		var err error
+		filePATH := "../html" + ctx.URL.Path
+		if _, er := os.Stat(filePATH); er == nil {
+			h, err = os.ReadFile(filePATH)
+		} else {
+			h, err = Content.ReadFile("html" + ctx.URL.Path)
+		}
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		ctx.Html(http.StatusOK, h)
+	})
+
+	err := http.ListenAndServe(uri, a)
+
 	if err != nil {
-		log.Println("ListenAndServe:", err)
-		logging.Object.Warn().Err(err).Timestamp().Msg("Server start failed")
+		log.Fatalf("Could not start server: %s\n", err.Error())
 	}
+
 }

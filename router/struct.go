@@ -5,35 +5,21 @@ import (
 	"regexp"
 )
 
-// type Middleware func(*Context) error
-type Handler func(*Context)
+type Handler func(c *Context)
 type Middleware func(Handler) Handler
 
-type Methods map[string]bool
-
 type Route struct {
-	Pattern     *regexp.Regexp
-	Handler     Handler
-	Methods     Methods
-	Middlewares []Middleware
+	Pattern *regexp.Regexp
+	Handler Handler
 }
 
 type App struct {
-	Routes           []Route
-	DefaultRoute     Handler
-	MethodNotAllowed Handler
-	Middlewares      []Middleware
-}
-
-type RouteGroup struct {
-	App         *App
-	Prefix      string
-	Middlewares []Middleware
+	Routes       []Route
+	DefaultRoute Handler
 }
 
 type Context struct {
 	http.ResponseWriter
 	*http.Request
-	Params   []string
-	AuthInfo interface{}
+	Params []string
 }
