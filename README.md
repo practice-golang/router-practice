@@ -6,7 +6,7 @@
 ## Practice what
 * own router, group-router
 * regexp, path/filepath, testing
-* tooling usage: rs/cors, rs/zerolog, mitchellh/gox, gobwas/ws, github action, gocov, codecov
+* tooling usage: rs/cors, rs/zerolog, lestrrat-go/jwx, mitchellh/gox, gobwas/ws, github action, gocov, codecov
 
 ## Build
 * see [Makefile](/Makefile)
@@ -19,6 +19,3 @@
 
 ## Source
 * https://gist.github.com/reagent/043da4661d2984e9ecb1ccb5343bf438
-
-## Other
-* https://benhoyt.com/writings/go-routing
