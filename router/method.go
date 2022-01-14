@@ -60,11 +60,9 @@ func (c *Context) Text(code int, body string) {
 	io.WriteString(c.ResponseWriter, fmt.Sprintf("%s\n", body))
 }
 
-// func (c *Context) Html(code int, body string) {
 func (c *Context) Html(code int, body []byte) {
 	c.ResponseWriter.Header().Set("Content-Type", "text/html")
 	c.WriteHeader(code)
 
 	io.Writer(c.ResponseWriter).Write(body)
-	// io.WriteString(c.ResponseWriter, fmt.Sprintf("%s\n", body))
 }
