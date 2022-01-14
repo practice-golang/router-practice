@@ -9,13 +9,13 @@
 * tooling usage: rs/cors, rs/zerolog, mitchellh/gox, gobwas/ws, github action, gocov, codecov
 
 ## Build
-* see [Makefile](/blob/main/Makefile)
+* see [Makefile](/Makefile)
 
 ## Route
-* see `requests.http`, `setup.go`
+* see [requests.http](/request.http), [setup.go](/setup.go)
 
 ## Coverage checking
-* see `Makefile`, `cover.cmd`
+* see [Makefile](/Makefile), [cover.cmd](/cover.cmd)
 
 ## Source
 * https://gist.github.com/reagent/043da4661d2984e9ecb1ccb5343bf438
