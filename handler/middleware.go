@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"errors"
 	"log"
 	"net/http"
 
@@ -34,8 +33,11 @@ func HelloGlobalMiddleware2(next router.Handler) router.Handler {
 func HelloMiddleware(next router.Handler) router.Handler {
 	return func(c *router.Context) {
 		c.Text(http.StatusInternalServerError, "Middle ware test error")
-		log.Println(errors.New("hello middleware error"))
-		return
+
+		// Parameter transfer test
+		// c.Request = c.WithContext(context.WithValue(c.Context(), router.ContextKey("say"), "hello middleware"))
+
+		// next(c)
 	}
 }
 

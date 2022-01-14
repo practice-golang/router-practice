@@ -39,6 +39,9 @@ func Hello(c *router.Context) {
 func HelloParam(c *router.Context) {
 	if len(c.Params) > 0 {
 		c.Text(http.StatusOK, "Hello "+c.Params[0])
+
+		// Parameter transfer test
+		// c.Text(http.StatusOK, "Hi, "+c.Params[0]+" / Context value: "+c.Context().Value(router.ContextKey("say")).(string))
 	} else {
 		c.Text(http.StatusBadRequest, "Missing parameter")
 	}

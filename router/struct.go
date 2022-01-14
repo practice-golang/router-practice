@@ -37,3 +37,5 @@ type Context struct {
 	Params   []string
 	AuthInfo interface{}
 }
+
+type ContextKey string
