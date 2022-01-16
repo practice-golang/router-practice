@@ -9,7 +9,8 @@
 
     <h1>Websocket chat</h1>
     <pre id="chat"></pre>
-    <input placeholder="Speak" id="text" type="text">
+    <input placeholder="Speak" id="room" type="text">
+    <input placeholder="Announce" id="announce" type="text">
 </body>
 
 <script>
@@ -17,10 +18,12 @@
     const ws = new WebSocket(url)
 
     const chat = document.getElementById("chat")
-    const text = document.getElementById("text")
+    const roomMSG = document.getElementById("room")
+    const announceMSG = document.getElementById("announce")
 
     ws.onclose = () => {
-        document.querySelector("#text").disabled = true
+        document.querySelector("#room").disabled = true
+        document.querySelector("#announce").disabled = true
         alert("Connection closed")
     }
 
@@ -29,10 +32,24 @@
         chat.innerText += line
     }
 
-    text.onkeydown = (e) => {
-        if (e.keyCode === 13 && text.value !== "") {
-            ws.send(text.value)
-            text.value = ""
+    roomMSG.onkeydown = (e) => {
+        if (e.keyCode === 13 && roomMSG.value !== "") {
+            msg = {
+                target: "room",
+                message: roomMSG.value
+            }
+            ws.send(JSON.stringify(msg))
+            roomMSG.value = ""
+        }
+    }
+    announceMSG.onkeydown = (e) => {
+        if (e.keyCode === 13 && announceMSG.value !== "") {
+            msg = {
+                target: "broadcast",
+                message: announceMSG.value
+            }
+            ws.send(JSON.stringify(msg))
+            announceMSG.value = ""
         }
     }
 </script>

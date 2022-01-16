@@ -3,11 +3,18 @@ package wsock
 import "net"
 
 type MsgShape struct {
-	msg string
+	Target  string `json:"target"`
+	RoomIdx uint64 `json:"-"`
+	Message string `json:"message"`
+}
+
+type WebSocketChatRoom struct {
+	Name    string
+	Workers map[uint64]WebSocketChatWorker
 }
 
 type WebSocketChatWorker struct {
-	conn  net.Conn
-	msgCH chan MsgShape
-	Idx   uint64
+	Idx     uint64
+	Conn    net.Conn
+	Message chan MsgShape
 }
