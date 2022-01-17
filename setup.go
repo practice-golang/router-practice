@@ -84,7 +84,7 @@ func setupRouter() {
 
 	/* Middleware */
 	gm := r.Group(``, handler.HelloMiddleware)
-	gm.GET(`/hi/([\p{L}\d_]+)$`, handler.HelloParam)
+	gm.GET(`^/hi/([\p{L}\d_]+)$`, handler.HelloParam)
 
 	/* Restricted - Cookie */
 	r.Handle(`^/signin$`, handler.Signin, "POST")
@@ -99,7 +99,7 @@ func setupRouter() {
 	/* HTML */
 	r.Handle(`^/?$`, handler.Index, "GET")
 
-	r.Handle(`/get-param$`, handler.GetParam, "GET")
+	r.Handle(`^/get-param$`, handler.GetParam, "GET")
 	r.Handle(`^/post-form$`, handler.PostForm, "GET", "POST")
 	r.Handle(`^/post-json$`, handler.PostJson, router.AllMethods...)
 
@@ -108,12 +108,12 @@ func setupRouter() {
 	r.Handle(`^/assets/.*[css|js|map|woff|woff2]$`, handler.HandleAsset, "GET")
 
 	/* Static */
-	r.Handle(`/static/*`, router.StaticServer, "GET")
-	r.Handle(`/embed/*`, router.EmbedStaticServer, "GET")
+	r.Handle(`^/static/*`, router.StaticServer, "GET")
+	r.Handle(`^/embed/*`, router.EmbedStaticServer, "GET")
 
 	/* Websocket - /ws.html */
-	r.Handle(`/ws-echo`, handler.HandleWebsocketEcho, "GET")
-	r.Handle(`/ws-chat`, handler.HandleWebsocketChat, "GET")
+	r.Handle(`^/ws-echo`, handler.HandleWebsocketEcho, "GET")
+	r.Handle(`^/ws-chat`, handler.HandleWebsocketChat, "GET")
 
 	ServerHandler = cors.Default().Handler(r)
 	// c := cors.New(cors.Options{
