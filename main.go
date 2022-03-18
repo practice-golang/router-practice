@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"router-practice/logging"
+	"router-practice/internal/logging"
 )
 
 //go:embed html/*
@@ -15,7 +15,9 @@ var Content embed.FS
 //go:embed embed/*
 var EmbedStatic embed.FS
 
-var StaticPath = "../static"
+// var StaticPath = "../static"
+var StaticPath = "static"
+var EmbedPath = "embed"
 
 var (
 	Address       string = "localhost"

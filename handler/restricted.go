@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"router-practice/auth"
-	"router-practice/model"
-	"router-practice/router"
+	"router-practice/internal/model"
+	"router-practice/internal/router"
 )
 
 func RestrictedHello(c *router.Context) {

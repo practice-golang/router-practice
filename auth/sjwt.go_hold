@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"router-practice/model"
+	"router-practice/internal/model"
 
 	"github.com/brianvoe/sjwt"
 )

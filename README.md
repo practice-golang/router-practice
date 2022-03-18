@@ -14,6 +14,13 @@
 ## Route
 * see [requests.http](/requests.http), [setup.go](/setup.go)
 
+## Files
+|        | embed | Find fs first |
+|--------|-------|---------------|
+| embed  | yes   | no            |
+| html   | yes   | yes           |
+| static | no    | yes           |
+
 ## Coverage checking
 * see [Makefile](/Makefile), [cover.cmd](/cover.cmd)
 

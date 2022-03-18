@@ -1,4 +1,4 @@
 package handler
 
-var StoreRoot = "../html"
-var EmbedRoot = "html"
+var StoreRoot = "../html" // Real storage
+var EmbedRoot = "html"    // Embed storage

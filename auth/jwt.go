@@ -10,7 +10,7 @@ import (
 	"log"
 	"time"
 
-	"router-practice/model"
+	"router-practice/internal/model"
 	"router-practice/variable"
 
 	"github.com/lestrrat-go/jwx/jwa"

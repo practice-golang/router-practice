@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"router-practice/model"
+	"router-practice/internal/model"
 )
 
 func SetupCookieToken(w http.ResponseWriter, authinfo model.AuthInfo) error {

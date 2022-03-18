@@ -6,9 +6,9 @@ import (
 
 	"router-practice/auth"
 	"router-practice/handler"
-	"router-practice/logging"
-	"router-practice/router"
-	"router-practice/util"
+	"router-practice/internal/logging"
+	"router-practice/internal/router"
+	"router-practice/internal/util"
 	"router-practice/wsock"
 
 	"github.com/rs/cors"
@@ -55,6 +55,7 @@ func setupLogger() {
 
 func setupRouter() {
 	router.StaticPath = StaticPath
+	router.EmbedPath = EmbedPath
 	router.Content = Content
 	router.EmbedStatic = EmbedStatic
 

@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"router-practice/model"
-	"router-practice/router"
+	"router-practice/internal/model"
+	"router-practice/internal/router"
 	"strings"
 	"testing"
 

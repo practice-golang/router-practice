@@ -1,5 +1,7 @@
 build:
 	go build -ldflags "-w -s" -trimpath -o bin/
+	cp -rf static bin/
+	cp -rf html bin/
 
 dist:
 	go get -d github.com/mitchellh/gox

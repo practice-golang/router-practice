@@ -4,7 +4,7 @@ import (
 	"embed"
 	"testing"
 
-	"router-practice/router"
+	"router-practice/internal/router"
 )
 
 //go:embed embed_test/*

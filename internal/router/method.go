@@ -12,7 +12,7 @@ import (
 	"regexp"
 	"strings"
 
-	"router-practice/logging"
+	"router-practice/internal/logging"
 )
 
 var StaticServer Handler

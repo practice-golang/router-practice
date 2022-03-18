@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"router-practice/router"
+	"router-practice/internal/router"
 
 	"github.com/stretchr/testify/require"
 )
