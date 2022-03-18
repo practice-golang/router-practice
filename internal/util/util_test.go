@@ -29,7 +29,7 @@ func TestCheckFileExists(t *testing.T) {
 		{
 			name: "CheckFileExists",
 			args: args{
-				path: "../main.go",
+				path: "../../main.go",
 			},
 			wantResult: true,
 		},
