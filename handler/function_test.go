@@ -3,6 +3,7 @@ package handler
 import (
 	"bytes"
 	"embed"
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -13,7 +14,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/goccy/go-json"
+	// "github.com/goccy/go-json"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/net/websocket"
 )

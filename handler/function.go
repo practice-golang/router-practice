@@ -2,6 +2,7 @@ package handler
 
 import (
 	"bytes"
+	"encoding/json"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -14,8 +15,7 @@ import (
 	"router-practice/wsock"
 
 	"gopkg.in/guregu/null.v4"
-
-	"github.com/goccy/go-json"
+	// "github.com/goccy/go-json"
 )
 
 func Index(c *router.Context) {
