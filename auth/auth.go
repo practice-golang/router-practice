@@ -7,6 +7,9 @@ import (
 	"strings"
 
 	"router-practice/internal/model"
+	"router-practice/internal/router"
+
+	"gopkg.in/guregu/null.v4"
 )
 
 func SetupCookieToken(w http.ResponseWriter, authinfo model.AuthInfo) error {
@@ -19,6 +22,36 @@ func SetupCookieToken(w http.ResponseWriter, authinfo model.AuthInfo) error {
 	SetCookieHeader(w, token, authinfo.Duration.Int64)
 
 	return nil
+}
+
+func SetCookieSession(c *router.Context, authinfo model.AuthInfo) error {
+	SessionManager.Put(c.Context(), "userid", authinfo.Name.String)
+	SessionManager.Put(c.Context(), "ip", authinfo.IpAddr.String)
+	SessionManager.Put(c.Context(), "platform", authinfo.Platform.String)
+
+	return nil
+}
+
+func GetCookieSession(c *router.Context) (model.AuthInfo, error) {
+	var result model.AuthInfo
+
+	if !SessionManager.Exists(c.Context(), "userid") {
+		return result, errors.New("userid is empty")
+	}
+
+	result = model.AuthInfo{
+		Name:     null.NewString(SessionManager.GetString(c.Context(), "userid"), true),
+		IpAddr:   null.NewString(SessionManager.GetString(c.Context(), "ip"), true),
+		Platform: null.NewString(SessionManager.GetString(c.Context(), "platform"), true),
+	}
+
+	return result, nil
+}
+
+func DestroyCookieSession(c *router.Context) error {
+	err := SessionManager.Destroy(c.Context())
+
+	return err
 }
 
 func GetClaim(r http.Request, from string) (model.AuthInfo, error) {

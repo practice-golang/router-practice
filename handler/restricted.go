@@ -16,6 +16,7 @@ func RestrictedHello(c *router.Context) {
 // SignOut - Expire cookie
 func SignOut(c *router.Context) {
 	auth.ExpireCookie(c.ResponseWriter)
+	auth.DestroyCookieSession(c)
 	authinfo := c.AuthInfo.(model.AuthInfo)
 	c.Text(http.StatusOK, "Good bye "+authinfo.Name.String)
 }

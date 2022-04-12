@@ -6,7 +6,7 @@
 ## Practice what
 * own router, group-router
 * regexp, path/filepath, testing
-* tooling usage: rs/cors, rs/zerolog, lestrrat-go/jwx, mitchellh/gox, gobwas/ws, github action, gocov, codecov
+* tooling usage: rs/cors, alexedwards/scs, rs/zerolog, lestrrat-go/jwx, mitchellh/gox, gobwas/ws, github action, gocov, codecov
 
 ## Build
 * see [Makefile](/Makefile)

@@ -3,6 +3,7 @@ module router-practice
 go 1.17
 
 require (
+	github.com/alexedwards/scs/v2 v2.5.0
 	github.com/c2fo/testify v0.0.0-20150827203832-fba96363964a
 	github.com/gobwas/ws v1.1.0
 	github.com/lestrrat-go/jwx v1.2.14

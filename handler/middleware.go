@@ -58,6 +58,23 @@ func AuthMiddleware(next router.Handler) router.Handler {
 	}
 }
 
+func AuthSessionMiddleware(next router.Handler) router.Handler {
+	return func(c *router.Context) {
+		claim, err := auth.GetCookieSession(c)
+		if err != nil {
+			auth.ExpireCookie(c.ResponseWriter)
+
+			c.Text(http.StatusUnauthorized, "Auth error")
+
+			return
+		}
+
+		c.AuthInfo = claim
+
+		next(c)
+	}
+}
+
 func AuthApiMiddleware(next router.Handler) router.Handler {
 	return func(c *router.Context) {
 		c.Request.Header.Get("Authorization")

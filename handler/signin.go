@@ -34,7 +34,8 @@ func Signin(c *router.Context) {
 		// Duration: null.NewInt(10, true), // 10 seconds test
 	}
 
-	auth.SetupCookieToken(c.ResponseWriter, authinfo)
+	// auth.SetupCookieToken(c.ResponseWriter, authinfo)
+	auth.SetCookieSession(c, authinfo)
 
 	c.Json(http.StatusOK, "Signin success")
 }

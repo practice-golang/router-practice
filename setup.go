@@ -11,6 +11,8 @@ import (
 	"router-practice/internal/util"
 	"router-practice/wsock"
 
+	"github.com/alexedwards/scs/v2"
+	"github.com/alexedwards/scs/v2/memstore"
 	"github.com/rs/cors"
 )
 
@@ -89,7 +91,8 @@ func setupRouter() {
 
 	/* Restricted - Cookie */
 	r.Handle(`^/signin$`, handler.Signin, "POST")
-	gr := r.Group(``, handler.AuthMiddleware)
+	// gr := r.Group(``, handler.AuthMiddleware)
+	gr := r.Group(``, handler.AuthSessionMiddleware)
 	gr.GET(`^/restricted$`, handler.RestrictedHello)
 	gr.GET(`^/signout$`, handler.SignOut)
 
@@ -116,7 +119,8 @@ func setupRouter() {
 	r.Handle(`^/ws-echo`, handler.HandleWebsocketEcho, "GET")
 	r.Handle(`^/ws-chat`, handler.HandleWebsocketChat, "GET")
 
-	ServerHandler = cors.Default().Handler(r)
+	ServerHandler = auth.SessionManager.LoadAndSave(cors.Default().Handler(r))
+	// ServerHandler = cors.Default().Handler(r)
 	// c := cors.New(cors.Options{
 	// 	AllowedOrigins:   []string{"http://"+listen},
 	// 	AllowedMethods:   []string{"GET"},
@@ -124,12 +128,24 @@ func setupRouter() {
 	// 	AllowCredentials: true,
 	// 	Debug:            false,
 	// })
-	// serverHandler := c.Handler(r)
+	// ServerHandler := c.Handler(r)
 
 }
 
 func doSetup() {
 	_ = os.Mkdir(StaticPath, os.ModePerm)
+
+	auth.SessionManager = scs.New()
+	auth.SessionManager.Store = memstore.New()
+	auth.SessionManager.Lifetime = 3 * time.Hour
+	auth.SessionManager.IdleTimeout = 20 * time.Minute
+	auth.SessionManager.Cookie.Name = "session_id"
+	// auth.SessionManager.Cookie.Domain = "example.com"
+	// auth.SessionManager.Cookie.HttpOnly = true
+	// auth.SessionManager.Cookie.Path = "/example/"
+	// auth.SessionManager.Cookie.Persist = true
+	// auth.SessionManager.Cookie.SameSite = http.SameSiteStrictMode
+	// auth.SessionManager.Cookie.Secure = true
 
 	setupKey()
 	setupLogger()
