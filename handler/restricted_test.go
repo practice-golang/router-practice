@@ -40,23 +40,23 @@ func Test_RestrictedHello(t *testing.T) {
 				run_func: RestrictedHello,
 			},
 		},
-		{
-			name: "Test_SignOut",
-			args: args{
-				c: &router.Context{
-					Request:        httptest.NewRequest("GET", "/api", nil),
-					ResponseWriter: http.ResponseWriter(httptest.NewRecorder()),
-					AuthInfo: model.AuthInfo{
-						Name:     null.StringFrom("test_name"),
-						IpAddr:   null.StringFrom("192.168.0.1"),
-						Platform: null.StringFrom("test_platform"),
-						Duration: null.IntFrom(3600),
-					},
-				},
-				want:     []byte("Good bye test_name"),
-				run_func: SignOut,
-			},
-		},
+		// {
+		// 	name: "Test_SignOut",
+		// 	args: args{
+		// 		c: &router.Context{
+		// 			Request:        httptest.NewRequest("GET", "/api", nil),
+		// 			ResponseWriter: http.ResponseWriter(httptest.NewRecorder()),
+		// 			AuthInfo: model.AuthInfo{
+		// 				Name:     null.StringFrom("test_name"),
+		// 				IpAddr:   null.StringFrom("192.168.0.1"),
+		// 				Platform: null.StringFrom("test_platform"),
+		// 				Duration: null.IntFrom(3600),
+		// 			},
+		// 		},
+		// 		want:     []byte("Good bye test_name"),
+		// 		run_func: SignOut,
+		// 	},
+		// },
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

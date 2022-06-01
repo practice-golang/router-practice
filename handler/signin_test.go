@@ -4,12 +4,18 @@ import (
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
+	"time"
 
+	"router-practice/auth"
 	"router-practice/internal/router"
 
+	"github.com/alexedwards/scs/v2"
+	"github.com/alexedwards/scs/v2/memstore"
 	"github.com/stretchr/testify/require"
 )
 
@@ -27,20 +33,33 @@ func Test_Signin(t *testing.T) {
 			name: "Test_Signin",
 			args: args{
 				c: &router.Context{
-					Request: httptest.NewRequest(
-						"GET", "/signin",
-						bytes.NewBuffer([]byte(`{"name": "test_user","password": "12345"}`))),
 					ResponseWriter: http.ResponseWriter(httptest.NewRecorder()),
+					Request:        httptest.NewRequest("POST", "/signin", bytes.NewBuffer([]byte(`{"name": "test_user","password": "12345"}`))),
+					Params:         []string{},
+					AuthInfo:       nil,
 				},
 				want:     []byte(`"Signin success"`),
 				run_func: Signin,
 			},
 		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tt.args.run_func(tt.args.c)
 
+	auth.SessionManager = scs.New()
+	auth.SessionManager.Store = memstore.New()
+	auth.SessionManager.Lifetime = 3 * time.Hour
+	auth.SessionManager.IdleTimeout = 20 * time.Minute
+	auth.SessionManager.Cookie.Name = "session_id"
+
+	for _, tt := range tests {
+
+		t.Run(tt.name, func(t *testing.T) {
+			newCTX, err := auth.SessionManager.Load(tt.args.c.Context(), "")
+			if err != nil {
+				t.Errorf("error loading from session manager: %v", err)
+			}
+
+			tt.args.c.Request = tt.args.c.WithContext(newCTX)
+			tt.args.run_func(tt.args.c)
 			res := tt.args.c.ResponseWriter.(*httptest.ResponseRecorder).Result()
 			defer res.Body.Close()
 			data, err := ioutil.ReadAll(res.Body)
@@ -68,7 +87,7 @@ func Test_SigninAPI(t *testing.T) {
 			args: args{
 				c: &router.Context{
 					Request: httptest.NewRequest(
-						"GET", "/signin",
+						"POST", "/api/signin",
 						bytes.NewBuffer([]byte(`{"name": "test_user","password": "12345"}`))),
 					ResponseWriter: http.ResponseWriter(httptest.NewRecorder()),
 				},
@@ -77,6 +96,17 @@ func Test_SigninAPI(t *testing.T) {
 			},
 		},
 	}
+
+	auth.GenerateRsaKeys()
+	auth.SaveRsaKeys()
+	err := auth.GenerateKeySet()
+	if err != nil {
+		panic(err)
+	}
+
+	defer os.Remove("private.key")
+	defer os.Remove("public.key")
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.args.run_func(tt.args.c)
@@ -84,6 +114,7 @@ func Test_SigninAPI(t *testing.T) {
 			res := tt.args.c.ResponseWriter.(*httptest.ResponseRecorder).Result()
 			defer res.Body.Close()
 			data, err := ioutil.ReadAll(res.Body)
+			log.Println("WTF", string(data))
 			if err != nil {
 				t.Errorf("expected error to be nil got %v", err)
 			}
