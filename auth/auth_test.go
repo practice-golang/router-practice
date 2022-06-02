@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"router-practice/internal/model"
+	"router-practice/model"
 
 	"gopkg.in/guregu/null.v4"
 )

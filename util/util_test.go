@@ -4,7 +4,7 @@ import (
 	"embed"
 	"testing"
 
-	"router-practice/internal/router"
+	"router-practice/router"
 )
 
 //go:embed embed_test/*
@@ -29,7 +29,7 @@ func TestCheckFileExists(t *testing.T) {
 		{
 			name: "CheckFileExists",
 			args: args{
-				path: "../../main.go",
+				path: "../main.go",
 			},
 			wantResult: true,
 		},

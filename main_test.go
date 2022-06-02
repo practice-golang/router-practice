@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"router-practice/auth"
-	"router-practice/internal/logging"
-	"router-practice/internal/router"
+	"router-practice/logging"
+	"router-practice/router"
 	"router-practice/variable"
 
 	"github.com/stretchr/testify/require"

@@ -7,11 +7,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"router-practice/internal/fd"
-	"router-practice/internal/logging"
-	"router-practice/internal/model"
-	"router-practice/internal/router"
-	"router-practice/internal/util"
+	"router-practice/fd"
+	"router-practice/logging"
+	"router-practice/model"
+	"router-practice/router"
+	"router-practice/util"
 	"router-practice/wsock"
 
 	"gopkg.in/guregu/null.v4"

@@ -6,9 +6,9 @@ import (
 
 	"router-practice/auth"
 	"router-practice/handler"
-	"router-practice/internal/logging"
-	"router-practice/internal/router"
-	"router-practice/internal/util"
+	"router-practice/logging"
+	"router-practice/router"
+	"router-practice/util"
 	"router-practice/wsock"
 
 	"github.com/alexedwards/scs/v2"

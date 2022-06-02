@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"router-practice/auth"
-	"router-practice/internal/router"
+	"router-practice/router"
 )
 
 func HelloGlobalMiddleware1(next router.Handler) router.Handler {

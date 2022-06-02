@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"router-practice/internal/logging"
+	"router-practice/logging"
 )
 
 //go:embed html/*

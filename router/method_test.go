@@ -134,7 +134,7 @@ func Test_Static(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			StaticPath = "../../static"
+			StaticPath = "../static"
 			EmbedPath = "embed_test"
 			EmbedStatic = fncStatic
 

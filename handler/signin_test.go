@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"router-practice/auth"
-	"router-practice/internal/router"
+	"router-practice/router"
 
 	"github.com/alexedwards/scs/v2"
 	"github.com/alexedwards/scs/v2/memstore"

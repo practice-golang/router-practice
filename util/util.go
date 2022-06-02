@@ -4,7 +4,7 @@ import (
 	"io/fs"
 	"os"
 
-	"router-practice/internal/router"
+	"router-practice/router"
 )
 
 func CheckFileExists(path string, isEmbed bool) (result bool) {

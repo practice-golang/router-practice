@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"router-practice/auth"
-	"router-practice/internal/model"
-	"router-practice/internal/router"
+	"router-practice/model"
+	"router-practice/router"
 
 	"gopkg.in/guregu/null.v4"
 )
