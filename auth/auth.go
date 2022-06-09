@@ -35,7 +35,7 @@ func SetCookieSession(c *router.Context, authinfo model.AuthInfo) error {
 func GetCookieSession(c *router.Context) (model.AuthInfo, error) {
 	var result model.AuthInfo
 
-	if !SessionManager.Exists(c.Context(), "userid") {
+	if SessionManager == nil || !SessionManager.Exists(c.Context(), "userid") {
 		return result, errors.New("userid is empty")
 	}
 
