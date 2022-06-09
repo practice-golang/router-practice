@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 
 	"router-practice/auth"
 	"router-practice/fd"
@@ -17,6 +18,13 @@ import (
 
 	"gopkg.in/guregu/null.v4"
 	// "github.com/goccy/go-json"
+)
+
+var (
+	patternLinkLogin  = `#LinkLogin(.*)\n`
+	patternLinkLogout = `#LinkLogout(.*)\n`
+	reLogin           = regexp.MustCompile(patternLinkLogin)
+	reLogout          = regexp.MustCompile(patternLinkLogout)
 )
 
 func Index(c *router.Context) {
@@ -124,7 +132,15 @@ func HandleHTML(c *router.Context) {
 		}
 	}
 
+	if name != "Guest" {
+		h = reLogin.ReplaceAll(h, []byte(""))
+	} else {
+		h = reLogout.ReplaceAll(h, []byte(""))
+	}
+
 	h = bytes.ReplaceAll(h, []byte("#USERNAME"), []byte(name))
+	h = bytes.ReplaceAll(h, []byte("#LinkLogin"), []byte(""))
+	h = bytes.ReplaceAll(h, []byte("#LinkLogout"), []byte(""))
 
 	c.Html(http.StatusOK, h)
 }
