@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"router-practice/auth"
 	"router-practice/fd"
 	"router-practice/logging"
 	"router-practice/model"
@@ -108,7 +109,22 @@ func HandleHTML(c *router.Context) {
 		logging.Object.Warn().Err(err).Msg("HandleHTML")
 	}
 
-	h = bytes.ReplaceAll(h, []byte("#USERNAME"), []byte("Robert Garcia"))
+	name := "Robert Garcia"
+
+	// Session
+	claim, err := auth.GetCookieSession(c)
+	if err != nil {
+		auth.ExpireCookie(c.ResponseWriter)
+	}
+	c.AuthInfo = claim
+	if c.AuthInfo != nil {
+		authinfo := c.AuthInfo.(model.AuthInfo)
+		if authinfo.Name.Valid {
+			name = authinfo.Name.String
+		}
+	}
+
+	h = bytes.ReplaceAll(h, []byte("#USERNAME"), []byte(name))
 
 	c.Html(http.StatusOK, h)
 }

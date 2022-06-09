@@ -40,6 +40,33 @@ func Signin(c *router.Context) {
 	c.Json(http.StatusOK, "Signin success")
 }
 
+func Login(c *router.Context) {
+	failBody := `<meta http-equiv="refresh" content="2; url=/"></meta>`
+
+	username := c.FormValue("username")
+	password := c.FormValue("password")
+
+	if username == "" || password == "" {
+		c.Html(http.StatusBadRequest, []byte(failBody+`Missing parameter`))
+		return
+	}
+
+	authinfo := model.AuthInfo{
+		Name:     null.NewString(username, true),
+		IpAddr:   null.NewString(c.RemoteAddr, true),
+		Platform: null.NewString("", true),
+		Duration: null.NewInt(60*60*24*7, true),
+		// Duration: null.NewInt(10, true), // 10 seconds test
+	}
+
+	auth.SetCookieSession(c, authinfo)
+
+	// c.Json(http.StatusOK, "Signin success")
+
+	destination := "/"
+	c.Html(http.StatusOK, []byte(`<meta http-equiv="refresh" content="0; url=`+destination+`"></meta>`))
+}
+
 func SigninAPI(c *router.Context) {
 	var err error
 

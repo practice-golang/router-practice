@@ -91,6 +91,7 @@ func setupRouter() {
 
 	/* Restricted - Cookie */
 	r.Handle(`^/signin$`, handler.Signin, "POST")
+	r.Handle(`^/login$`, handler.Login, "POST")
 	// gr := r.Group(``, handler.AuthMiddleware)
 	gr := r.Group(``, handler.AuthSessionMiddleware)
 	gr.GET(`^/restricted$`, handler.RestrictedHello)
