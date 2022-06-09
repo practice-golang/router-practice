@@ -90,7 +90,7 @@ func Test_Index(t *testing.T) {
 				t.Errorf("expected error to be nil got %v", err)
 			}
 
-			want = bytes.ReplaceAll(want, []byte("#USERNAME"), []byte("Robert Garcia"))
+			want = bytes.ReplaceAll(want, []byte("#USERNAME"), []byte("Guest"))
 
 			require.Equal(t, want, data, tt.name+" not equal"+"embed_test / "+tt.args.c.URL.Path)
 		})

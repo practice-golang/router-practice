@@ -109,7 +109,7 @@ func HandleHTML(c *router.Context) {
 		logging.Object.Warn().Err(err).Msg("HandleHTML")
 	}
 
-	name := "Robert Garcia"
+	name := "Guest"
 
 	// Session
 	claim, err := auth.GetCookieSession(c)
