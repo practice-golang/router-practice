@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"regexp"
 	"router-practice/model"
 	"router-practice/router"
 	"strings"
@@ -90,9 +91,14 @@ func Test_Index(t *testing.T) {
 				t.Errorf("expected error to be nil got %v", err)
 			}
 
-			want = bytes.ReplaceAll(want, []byte("#USERNAME"), []byte("Guest"))
+			patternLinkLogout = `#LinkLogout(.*)\n`
+			reLogout = regexp.MustCompile(patternLinkLogout)
 
-			require.Equal(t, want, data, tt.name+" not equal"+"embed_test / "+tt.args.c.URL.Path)
+			want = bytes.ReplaceAll(want, []byte("#USERNAME"), []byte("Guest"))
+			want = bytes.ReplaceAll(want, []byte("#LinkLogin"), []byte(""))
+			want = reLogout.ReplaceAll(want, []byte(""))
+
+			require.Equal(t, string(want), string(data), tt.name+" not equal"+"embed_test / "+tt.args.c.URL.Path)
 		})
 	}
 }
