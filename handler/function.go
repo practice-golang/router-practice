@@ -26,7 +26,7 @@ var (
 	reLogin           = regexp.MustCompile(patternLinkLogin)
 	reLogout          = regexp.MustCompile(patternLinkLogout)
 
-	patternIncludes = `@(.*)\n`
+	patternIncludes = `@INCLUDE@(.*)\n`
 	reIncludes      = regexp.MustCompile(patternIncludes)
 )
 
