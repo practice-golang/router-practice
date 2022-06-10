@@ -25,6 +25,9 @@ var (
 	patternLinkLogout = `#LinkLogout(.*)\n`
 	reLogin           = regexp.MustCompile(patternLinkLogin)
 	reLogout          = regexp.MustCompile(patternLinkLogout)
+
+	patternIncludes = `@(.*)\n`
+	reIncludes      = regexp.MustCompile(patternIncludes)
 )
 
 func Index(c *router.Context) {
@@ -136,6 +139,25 @@ func HandleHTML(c *router.Context) {
 		h = reLogin.ReplaceAll(h, []byte(""))
 	} else {
 		h = reLogout.ReplaceAll(h, []byte(""))
+	}
+
+	m := reIncludes.FindAllSubmatch(h, -1)
+	// includes := map[string][]byte{}
+	for _, v := range m {
+		includeFileName := string(v[1])
+		includeDirective := bytes.TrimSpace(v[0])
+		includeEmbedFilePath := EmbedRoot + "/" + includeFileName
+		includeStoreFilePath := StoreRoot + "/" + includeFileName
+
+		include := []byte{}
+		switch true {
+		case util.CheckFileExists(includeStoreFilePath, false):
+			include, _ = os.ReadFile(includeStoreFilePath)
+		case util.CheckFileExists(includeEmbedFilePath, true):
+			include, _ = router.Content.ReadFile(includeEmbedFilePath)
+		}
+
+		h = bytes.ReplaceAll(h, includeDirective, include)
 	}
 
 	h = bytes.ReplaceAll(h, []byte("#USERNAME"), []byte(name))

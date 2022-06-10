@@ -9,9 +9,11 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
 	"regexp"
 	"router-practice/model"
 	"router-practice/router"
+	"router-practice/util"
 	"strings"
 	"testing"
 
@@ -93,6 +95,28 @@ func Test_Index(t *testing.T) {
 
 			patternLinkLogout = `#LinkLogout(.*)\n`
 			reLogout = regexp.MustCompile(patternLinkLogout)
+			patternIncludes = `@(.*)\n`
+			reIncludes = regexp.MustCompile(patternIncludes)
+
+			/* Include */
+			m := reIncludes.FindAllSubmatch(want, -1)
+			// includes := map[string][]byte{}
+			for _, v := range m {
+				includeFileName := string(v[1])
+				includeDirective := bytes.TrimSpace(v[0])
+				includeEmbedFilePath := EmbedRoot + "/" + includeFileName
+				includeStoreFilePath := StoreRoot + "/" + includeFileName
+
+				include := []byte{}
+				switch true {
+				case util.CheckFileExists(includeStoreFilePath, false):
+					include, _ = os.ReadFile(includeStoreFilePath)
+				case util.CheckFileExists(includeEmbedFilePath, true):
+					include, _ = router.Content.ReadFile(includeEmbedFilePath)
+				}
+
+				want = bytes.ReplaceAll(want, includeDirective, include)
+			}
 
 			want = bytes.ReplaceAll(want, []byte("#USERNAME"), []byte("Guest"))
 			want = bytes.ReplaceAll(want, []byte("#LinkLogin"), []byte(""))
