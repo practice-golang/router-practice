@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 
 	"router-practice/auth"
 	"router-practice/fd"
@@ -26,7 +27,7 @@ var (
 	reLogin           = regexp.MustCompile(patternLinkLogin)
 	reLogout          = regexp.MustCompile(patternLinkLogout)
 
-	patternIncludes = `@INCLUDE@(.*)\n`
+	patternIncludes = `@INCLUDE@(.*)(\n|$)`
 	reIncludes      = regexp.MustCompile(patternIncludes)
 )
 
@@ -146,8 +147,8 @@ func HandleHTML(c *router.Context) {
 	for _, v := range m {
 		includeFileName := string(v[1])
 		includeDirective := bytes.TrimSpace(v[0])
-		includeEmbedFilePath := EmbedRoot + "/" + includeFileName
-		includeStoreFilePath := StoreRoot + "/" + includeFileName
+		includeStoreFilePath := strings.TrimSpace(StoreRoot + "/" + includeFileName)
+		includeEmbedFilePath := strings.TrimSpace(EmbedRoot + "/" + includeFileName)
 
 		include := []byte{}
 		switch true {
