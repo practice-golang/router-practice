@@ -59,7 +59,7 @@ func Test_Router(t *testing.T) {
 					ResponseWriter: http.ResponseWriter(httptest.NewRecorder()),
 				},
 			},
-			want: []byte("Not found"),
+			want: []byte("Method not allowed"),
 		},
 		{
 			name: "Test_Router_html",
