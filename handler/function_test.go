@@ -95,7 +95,7 @@ func Test_Index(t *testing.T) {
 
 			patternLinkLogout = `#LinkLogout(.*)\n`
 			reLogout = regexp.MustCompile(patternLinkLogout)
-			patternIncludes = `@INCLUDE@(.*)\n`
+			patternIncludes = `@INCLUDE@(.*)(\n|$)`
 			reIncludes = regexp.MustCompile(patternIncludes)
 
 			/* Include */
@@ -104,8 +104,8 @@ func Test_Index(t *testing.T) {
 			for _, v := range m {
 				includeFileName := string(v[1])
 				includeDirective := bytes.TrimSpace(v[0])
-				includeEmbedFilePath := EmbedRoot + "/" + includeFileName
-				includeStoreFilePath := StoreRoot + "/" + includeFileName
+				includeStoreFilePath := strings.TrimSpace(StoreRoot + "/" + includeFileName)
+				includeEmbedFilePath := strings.TrimSpace(EmbedRoot + "/" + includeFileName)
 
 				include := []byte{}
 				switch true {
@@ -120,6 +120,7 @@ func Test_Index(t *testing.T) {
 
 			want = bytes.ReplaceAll(want, []byte("#USERNAME"), []byte("Guest"))
 			want = bytes.ReplaceAll(want, []byte("#LinkLogin"), []byte(""))
+			// want = bytes.ReplaceAll(want, []byte("#LinkLogout"), []byte(""))
 			want = reLogout.ReplaceAll(want, []byte(""))
 
 			require.Equal(t, string(want), string(data), tt.name+" not equal"+"embed_test / "+tt.args.c.URL.Path)
