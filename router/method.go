@@ -114,13 +114,13 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Fields(map[string]interface{}{"header": c.Request.Header}).
 		Send()
 
+	methodNotAllowed := false
 	for _, rt := range a.Routes {
 		matches := rt.Pattern.FindStringSubmatch(c.URL.Path)
 		if len(matches) > 0 {
 			if !rt.Methods[c.Method] {
-				// a.MethodNotAllowed(c)
-				a.DefaultRoute(c)
-				return
+				methodNotAllowed = true
+				continue
 			}
 
 			if len(matches) > 1 {
@@ -136,7 +136,11 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	a.DefaultRoute(c)
+	if methodNotAllowed {
+		a.MethodNotAllowed(c)
+	} else {
+		a.DefaultRoute(c)
+	}
 }
 
 func (c *Context) Text(code int, body string) {
