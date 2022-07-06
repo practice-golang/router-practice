@@ -32,6 +32,10 @@ func New(middleware ...Middleware) *App {
 	return app
 }
 
+func (a *App) Use(middlewares ...Middleware) {
+	a.Middlewares = append(a.Middlewares, middlewares...)
+}
+
 func (a *App) Group(prefix string, middleware ...Middleware) *RouteGroup {
 	group := &RouteGroup{
 		App:         a,
@@ -40,6 +44,10 @@ func (a *App) Group(prefix string, middleware ...Middleware) *RouteGroup {
 	}
 
 	return group
+}
+
+func (g *RouteGroup) Use(middlewares ...Middleware) {
+	g.Middlewares = append(g.Middlewares, middlewares...)
 }
 
 func (g *RouteGroup) Handle(pattern string, handler Handler, methods ...string) {
