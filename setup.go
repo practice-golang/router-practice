@@ -93,7 +93,9 @@ func setupRouter() {
 	r.Handle(`^/signin$`, handler.Signin, "POST")
 	r.Handle(`^/login$`, handler.Login, "POST")
 	// gr := r.Group(``, handler.AuthMiddleware)
-	gr := r.Group(``, handler.AuthSessionMiddleware)
+	// gr := r.Group(``, handler.AuthSessionMiddleware)
+	gr := r.Group(``)
+	gr.Use(handler.AuthSessionMiddleware)
 	gr.GET(`^/restricted$`, handler.RestrictedHello)
 	gr.GET(`^/signout$`, handler.SignOut)
 
